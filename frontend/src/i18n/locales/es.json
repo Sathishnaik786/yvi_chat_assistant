@@ -1,0 +1,59 @@
+{
+  "app": {
+    "title": "Asistente Técnico YVI",
+    "newChat": "Nueva Conversación",
+    "clearAll": "Borrar Todo"
+  },
+  "commands": {
+    "placeholder": "Escribe un comando o busca...",
+    "noResults": "No se encontraron resultados.",
+    "quickActions": "Acciones Rápidas",
+    "prompts": "Prompts",
+    "chats": "Conversaciones Recientes",
+    "navigation": "Navegación",
+    "newChat": "Nueva Conversación",
+    "search": "Buscar Conversaciones",
+    "settings": "Abrir Configuración",
+    "analytics": "Ver Analíticas",
+    "favorites": "Ver Favoritos",
+    "templates": "Plantillas de Conversación",
+    "folders": "Administrar Carpetas"
+  },
+  "folders": {
+    "title": "Carpetas",
+    "create": "Crear Carpeta",
+    "delete": "Eliminar Carpeta",
+    "rename": "Renombrar Carpeta",
+    "allChats": "Todas las Conversaciones",
+    "newFolder": "Nueva Carpeta",
+    "folderName": "Nombre de la Carpeta",
+    "selectColor": "Seleccionar Color"
+  },
+  "tags": {
+    "title": "Etiquetas",
+    "add": "Agregar Etiqueta",
+    "create": "Crear Etiqueta",
+    "delete": "Eliminar Etiqueta",
+    "filterByTag": "Filtrar por Etiqueta"
+  },
+  "language": {
+    "title": "Idioma",
+    "select": "Seleccionar Idioma",
+    "autoTranslate": "Auto-traducir mensajes",
+    "detecting": "Detectando idioma..."
+  },
+  "nav": {
+    "home": "Inicio"
+  },
+  "messages": {
+    "typing": "Escribiendo...",
+    "error": "Error al enviar mensaje",
+    "placeholder": "Escribe tu mensaje..."
+  },
+  "settings": {
+    "title": "Configuración",
+    "language": "Idioma",
+    "appearance": "Apariencia",
+    "general": "General"
+  }
+}

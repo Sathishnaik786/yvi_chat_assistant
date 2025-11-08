@@ -1,0 +1,59 @@
+{
+  "app": {
+    "title": "YVI Tech Assistant",
+    "newChat": "New Chat",
+    "clearAll": "Clear All Chats"
+  },
+  "commands": {
+    "placeholder": "Type a command or search...",
+    "noResults": "No results found.",
+    "quickActions": "Quick Actions",
+    "prompts": "Prompts",
+    "chats": "Recent Chats",
+    "navigation": "Navigation",
+    "newChat": "New Chat",
+    "search": "Search Conversations",
+    "settings": "Open Settings",
+    "analytics": "View Analytics",
+    "favorites": "View Favorites",
+    "templates": "Conversation Templates",
+    "folders": "Manage Folders"
+  },
+  "folders": {
+    "title": "Folders",
+    "create": "Create Folder",
+    "delete": "Delete Folder",
+    "rename": "Rename Folder",
+    "allChats": "All Chats",
+    "newFolder": "New Folder",
+    "folderName": "Folder Name",
+    "selectColor": "Select Color"
+  },
+  "tags": {
+    "title": "Tags",
+    "add": "Add Tag",
+    "create": "Create Tag",
+    "delete": "Delete Tag",
+    "filterByTag": "Filter by Tag"
+  },
+  "language": {
+    "title": "Language",
+    "select": "Select Language",
+    "autoTranslate": "Auto-translate messages",
+    "detecting": "Detecting language..."
+  },
+  "nav": {
+    "home": "Home"
+  },
+  "messages": {
+    "typing": "Typing...",
+    "error": "Error sending message",
+    "placeholder": "Type your message..."
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "appearance": "Appearance",
+    "general": "General"
+  }
+}

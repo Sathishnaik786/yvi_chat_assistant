@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YVI Tech Assistant - Guest</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="guest-page">
+  <div class="guest-container">
+    <div class="guest-content">
+      <div class="logo-container">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="YVI Tech Assistant Logo" class="guest-logo" />
+      </div>
+      <h1 class="guest-title">Welcome to YVI Tech Assistant</h1>
+      <p class="guest-description">Your AI-powered assistant for all things YVI Soft Solutions. Get instant answers about our services, capabilities, and processes.</p>
+      
+      <div class="guest-features">
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>Smart Conversations</h3>
+          <p>Ask questions in natural language and get precise answers.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Knowledge Base</h3>
+          <p>Access our comprehensive database of services and solutions.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔊</div>
+          <h3>Voice Support</h3>
+          <p>Speak your questions and listen to responses.</p>
+        </div>
+      </div>
+      
+      <div class="guest-actions">
+        <a href="/" class="btn primary-btn">Start Chatting</a>
+        <button id="theme-toggle" class="btn secondary-btn">🌓 Toggle Theme</button>
+      </div>
+      
+      <div class="guest-footer">
+        <p>© 2023 YVI Soft Solutions. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple theme toggle functionality for guest page
+    document.addEventListener("DOMContentLoaded", function () {
+      const themeToggle = document.getElementById("theme-toggle");
+      const body = document.body;
+      
+      // Check for saved theme preference
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        body.classList.add('light-theme');
+        themeToggle.textContent = '☀️ Light Mode';
+      } else {
+        themeToggle.textContent = '🌙 Dark Mode';
+      }
+      
+      themeToggle.addEventListener("click", function () {
+        body.classList.toggle('light-theme');
+        if (body.classList.contains('light-theme')) {
+          localStorage.setItem('theme', 'light');
+          themeToggle.textContent = '☀️ Light Mode';
+        } else {
+          localStorage.setItem('theme', 'dark');
+          themeToggle.textContent = '🌙 Dark Mode';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

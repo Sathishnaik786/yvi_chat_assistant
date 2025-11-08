@@ -1,0 +1,59 @@
+{
+  "app": {
+    "title": "Assistant Technique YVI",
+    "newChat": "Nouvelle Discussion",
+    "clearAll": "Tout Effacer"
+  },
+  "commands": {
+    "placeholder": "Tapez une commande ou recherchez...",
+    "noResults": "Aucun résultat trouvé.",
+    "quickActions": "Actions Rapides",
+    "prompts": "Prompts",
+    "chats": "Discussions Récentes",
+    "navigation": "Navigation",
+    "newChat": "Nouvelle Discussion",
+    "search": "Rechercher des Conversations",
+    "settings": "Ouvrir les Paramètres",
+    "analytics": "Voir les Analyses",
+    "favorites": "Voir les Favoris",
+    "templates": "Modèles de Conversation",
+    "folders": "Gérer les Dossiers"
+  },
+  "folders": {
+    "title": "Dossiers",
+    "create": "Créer un Dossier",
+    "delete": "Supprimer le Dossier",
+    "rename": "Renommer le Dossier",
+    "allChats": "Toutes les Discussions",
+    "newFolder": "Nouveau Dossier",
+    "folderName": "Nom du Dossier",
+    "selectColor": "Sélectionner la Couleur"
+  },
+  "tags": {
+    "title": "Étiquettes",
+    "add": "Ajouter une Étiquette",
+    "create": "Créer une Étiquette",
+    "delete": "Supprimer l'Étiquette",
+    "filterByTag": "Filtrer par Étiquette"
+  },
+  "language": {
+    "title": "Langue",
+    "select": "Sélectionner la Langue",
+    "autoTranslate": "Traduire automatiquement les messages",
+    "detecting": "Détection de la langue..."
+  },
+  "nav": {
+    "home": "Accueil"
+  },
+  "messages": {
+    "typing": "En train d'écrire...",
+    "error": "Erreur lors de l'envoi du message",
+    "placeholder": "Tapez votre message..."
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "appearance": "Apparence",
+    "general": "Général"
+  }
+}

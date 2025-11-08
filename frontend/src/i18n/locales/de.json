@@ -1,0 +1,59 @@
+{
+  "app": {
+    "title": "YVI Tech-Assistent",
+    "newChat": "Neuer Chat",
+    "clearAll": "Alles Löschen"
+  },
+  "commands": {
+    "placeholder": "Geben Sie einen Befehl ein oder suchen Sie...",
+    "noResults": "Keine Ergebnisse gefunden.",
+    "quickActions": "Schnellaktionen",
+    "prompts": "Prompts",
+    "chats": "Letzte Chats",
+    "navigation": "Navigation",
+    "newChat": "Neuer Chat",
+    "search": "Konversationen durchsuchen",
+    "settings": "Einstellungen öffnen",
+    "analytics": "Analysen anzeigen",
+    "favorites": "Favoriten anzeigen",
+    "templates": "Konversationsvorlagen",
+    "folders": "Ordner verwalten"
+  },
+  "folders": {
+    "title": "Ordner",
+    "create": "Ordner erstellen",
+    "delete": "Ordner löschen",
+    "rename": "Ordner umbenennen",
+    "allChats": "Alle Chats",
+    "newFolder": "Neuer Ordner",
+    "folderName": "Ordnername",
+    "selectColor": "Farbe auswählen"
+  },
+  "tags": {
+    "title": "Tags",
+    "add": "Tag hinzufügen",
+    "create": "Tag erstellen",
+    "delete": "Tag löschen",
+    "filterByTag": "Nach Tag filtern"
+  },
+  "language": {
+    "title": "Sprache",
+    "select": "Sprache auswählen",
+    "autoTranslate": "Nachrichten automatisch übersetzen",
+    "detecting": "Sprache wird erkannt..."
+  },
+  "nav": {
+    "home": "Startseite"
+  },
+  "messages": {
+    "typing": "Tippt...",
+    "error": "Fehler beim Senden der Nachricht",
+    "placeholder": "Geben Sie Ihre Nachricht ein..."
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "appearance": "Erscheinungsbild",
+    "general": "Allgemein"
+  }
+}

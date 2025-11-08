@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YVI Tech Assistant - Start Chat</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="start-page">
+  <div class="start-container">
+    <header class="start-header">
+      <div class="brand">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="logo" class="logo" />
+        <h1>YVI Tech Assistant</h1>
+      </div>
+      <div class="header-controls">
+        <button id="theme-toggle" class="theme-toggle">🌓</button>
+      </div>
+    </header>
+
+    <main class="start-main">
+      <div class="welcome-section">
+        <h2>👋 Welcome to YVI Tech Assistant</h2>
+        <p>Ask about our <strong>Services</strong>, <strong>Capabilities</strong>, or <strong>Process</strong>.</p>
+      </div>
+
+      <div class="quick-prompts">
+        <h3>Try asking about:</h3>
+        <div class="prompt-buttons">
+          <button class="prompt-btn" onclick="sendQuick('What services do you offer?')">Services</button>
+          <button class="prompt-btn" onclick="sendQuick('Tell me about Oracle HCM')">Oracle HCM</button>
+          <button class="prompt-btn" onclick="sendQuick('How does your development process work?')">Process</button>
+          <button class="prompt-btn" onclick="sendQuick('What are your other capabilities?')">Other Capabilities</button>
+        </div>
+      </div>
+
+      <div class="start-chat-container">
+        <div class="search-container">
+          <input type="text" id="user-input" class="search-input" placeholder="Message YVI Tech Assistant..." />
+          <div class="search-icons">
+            <button id="mic-btn" class="search-mic-btn" title="Start Voice Input (Ctrl+M)">🎤</button>
+            <button id="send-btn" class="search-send-btn">➤</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="listening-indicator" class="listening-indicator hidden">
+      <span>🎤 Listening...</span>
+    </div>
+  </div>
+
+  <script>
+    // Basic functionality for start page
+    document.addEventListener("DOMContentLoaded", function () {
+      const userInput = document.getElementById("user-input");
+      const sendBtn = document.getElementById("send-btn");
+      const themeToggle = document.getElementById("theme-toggle");
+      
+      // Check for saved theme preference
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+      }
+      
+      themeToggle.addEventListener("click", function () {
+        document.body.classList.toggle('light-theme');
+        if (document.body.classList.contains('light-theme')) {
+          localStorage.setItem('theme', 'light');
+        } else {
+          localStorage.setItem('theme', 'dark');
+        }
+      });
+      
+      sendBtn.addEventListener("click", function () {
+        const message = userInput.value.trim();
+        if (message) {
+          // Redirect to main chat page with the message
+          window.location.href = "/?message=" + encodeURIComponent(message);
+        }
+      });
+      
+      userInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          sendBtn.click();
+        }
+      });
+      
+      // Quick prompt function
+      window.sendQuick = function(message) {
+        // Redirect to main chat page with the message
+        window.location.href = "/?message=" + encodeURIComponent(message);
+      };
+    });
+  </script>
+</body>
+</html>

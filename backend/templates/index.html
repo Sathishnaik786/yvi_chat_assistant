@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YVI Tech Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <h2>YVI Assistant</h2>
+    </div>
+    <div class="sidebar-content">
+      <button id="new-chat-btn" class="sidebar-btn">🆕 New Chat</button>
+      <button id="chat-history-btn" class="sidebar-btn">📜 Chat History</button>
+      <button id="clear-all-btn" class="sidebar-btn">🧹 Clear All</button>
+      <a href="/admin" class="sidebar-btn">📊 Dashboard</a>
+      <button id="settings-btn" class="sidebar-btn">⚙️ Settings</button>
+    </div>
+    <div id="chat-history-list" class="chat-history-list hidden">
+      <h3>Chat History</h3>
+      <ul id="chat-history-items"></ul>
+    </div>
+    <div id="settings-panel" class="settings-panel hidden">
+      <h3>Settings</h3>
+      <div class="setting-item">
+        <label for="mute-toggle">🔇 Mute Voice Output</label>
+        <input type="checkbox" id="mute-toggle">
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay for mobile -->
+  <div id="sidebar-overlay" class="sidebar-overlay hidden"></div>
+
+  <div class="chat-wrapper">
+    <header class="chat-header">
+      <button id="sidebar-toggle" class="sidebar-toggle">☰</button>
+      <div class="brand">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="logo" class="logo" />
+        <h1>YVI Tech Assistant</h1>
+      </div>
+      <div class="header-controls">
+        <div class="language-selector">
+          <button id="language-btn" class="language-btn" title="Select Language">🌐</button>
+          <div id="language-dropdown" class="language-dropdown hidden">
+            <div class="language-option" data-lang="en">English</div>
+            <div class="language-option" data-lang="hi">Hindi</div>
+            <div class="language-option" data-lang="te">Telugu</div>
+            <div class="language-option" data-lang="es">Spanish</div>
+            <div class="language-option" data-lang="fr">French</div>
+            <div class="language-option" data-lang="de">German</div>
+            <div class="language-option" data-lang="ta">Tamil</div>
+          </div>
+        </div>
+        <button id="mute-header-toggle" class="mute-toggle" title="Mute Voice Output">🔇</button>
+        <button id="theme-toggle">🌓</button>
+      </div>
+    </header>
+
+    <main id="chat-window" class="chat-window">
+      <div id="welcome-message" class="welcome">
+        <h2>👋 Welcome to YVI Tech Assistant</h2>
+        <p>Ask about our <strong>Services</strong>, <strong>Capabilities</strong>, or <strong>Process</strong>.</p>
+      </div>
+    </main>
+
+    <footer class="chat-input-bar">
+      <div class="search-container">
+        <input type="text" id="user-input" class="search-input" placeholder="Message YVI Tech Assistant..." />
+        <div class="search-icons">
+          <button id="mic-btn" class="search-mic-btn" title="Start Voice Input (Ctrl+M)">🎤</button>
+          <button id="send-btn" class="search-send-btn">➤</button>
+        </div>
+      </div>
+    </footer>
+    
+    <div id="listening-indicator" class="listening-indicator hidden">
+      <span>🎤 Listening...</span>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

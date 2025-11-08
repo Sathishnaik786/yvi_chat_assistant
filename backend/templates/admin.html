@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YVI Tech Assistant - Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="dashboard-wrapper">
+    <header class="dashboard-header">
+      <div class="brand">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="logo" class="logo" />
+        <h1>YVI Tech Assistant Analytics</h1>
+      </div>
+      <div class="header-actions">
+        <button id="refresh-btn" class="refresh-btn">🔄 Refresh</button>
+        <a href="/" class="back-btn">💬 Back to Chat</a>
+      </div>
+    </header>
+
+    <main class="dashboard-content">
+      <!-- Stats Cards -->
+      <section class="stats-section">
+        <h2>Overview</h2>
+        <div class="stats-grid">
+          <div class="stats-card">
+            <div class="card-icon">💬</div>
+            <div class="card-content">
+              <h3>Total Chats</h3>
+              <p id="total-chats">0</p>
+            </div>
+          </div>
+          
+          <div class="stats-card">
+            <div class="card-icon">📧</div>
+            <div class="card-content">
+              <h3>Total Messages</h3>
+              <p id="total-messages">0</p>
+            </div>
+          </div>
+          
+          <div class="stats-card">
+            <div class="card-icon">👍</div>
+            <div class="card-content">
+              <h3>Positive Feedback</h3>
+              <p id="positive-feedback">0</p>
+            </div>
+          </div>
+          
+          <div class="stats-card">
+            <div class="card-icon">👎</div>
+            <div class="card-content">
+              <h3>Negative Feedback</h3>
+              <p id="negative-feedback">0</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Charts Section -->
+      <section class="charts-section">
+        <div class="chart-container">
+          <h3>Daily Chat Activity</h3>
+          <canvas id="activity-chart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+          <h3>Top Categories</h3>
+          <canvas id="categories-chart"></canvas>
+        </div>
+      </section>
+
+      <!-- Recent Logs Table -->
+      <section class="logs-section">
+        <h2>Recent Interactions</h2>
+        <div class="table-container">
+          <table class="logs-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>User Query</th>
+                <th>Response Preview</th>
+                <th>Category</th>
+                <th>Feedback</th>
+              </tr>
+            </thead>
+            <tbody id="logs-table-body">
+              <!-- Data will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='admin.js') }}"></script>
+</body>
+</html>
