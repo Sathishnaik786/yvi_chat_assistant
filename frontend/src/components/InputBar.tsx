@@ -57,49 +57,54 @@ export const InputBar = ({ onSend, disabled }: InputBarProps) => {
   };
 
   return (
-    <div className="border-t border-border bg-background p-4">
+    <div className="p-2 md:p-4">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-end gap-2">
           <div className="flex-1 relative">
-            <Textarea
-              ref={textareaRef}
-              value={message}
-              onChange={handleInput}
-              onKeyDown={handleKeyDown}
-              placeholder={isRecording ? 'Listening...' : 'Message YVI Tech Assistant...'}
-              disabled={disabled}
-              className="min-h-[52px] max-h-[200px] resize-none pr-20"
-              rows={1}
-            />
-            <div className="absolute right-2 bottom-2 flex gap-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                className={cn(
-                  'h-8 w-8',
-                  isRecording && 'text-red-500 animate-pulse'
-                )}
-                onClick={handleVoiceToggle}
+            <div className="relative rounded-xl bg-background">
+              <Textarea
+                ref={textareaRef}
+                value={message}
+                onChange={handleInput}
+                onKeyDown={handleKeyDown}
+                placeholder={isRecording ? 'Listening...' : 'Message YVI Assistant...'}
                 disabled={disabled}
-                title={isRecording ? 'Stop recording' : 'Start voice input'}
-              >
-                {isRecording ? (
-                  <MicOff className="h-4 w-4" />
-                ) : (
-                  <Mic className="h-4 w-4" />
-                )}
-              </Button>
+                className="min-h-[44px] md:min-h-[52px] max-h-[200px] resize-none pr-24 md:pr-28 rounded-xl border border-input bg-transparent focus-visible:ring-1 focus-visible:ring-ring"
+                rows={1}
+              />
+              <div className="absolute right-1 md:right-2 bottom-1 md:bottom-2 flex gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={cn(
+                    'h-7 w-7 md:h-8 md:w-8',
+                    isRecording && 'text-red-500 animate-pulse'
+                  )}
+                  onClick={handleVoiceToggle}
+                  disabled={disabled}
+                  title={isRecording ? 'Stop recording' : 'Start voice input'}
+                >
+                  {isRecording ? (
+                    <MicOff className="h-3 w-3 md:h-4 md:w-4" />
+                  ) : (
+                    <Mic className="h-3 w-3 md:h-4 md:w-4" />
+                  )}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 md:h-8 md:w-8"
+                  onClick={handleSend}
+                  disabled={!message.trim() || disabled}
+                  title="Send message"
+                >
+                  <Send className="h-3 w-3 md:h-4 md:w-4" />
+                </Button>
+              </div>
             </div>
           </div>
-          <Button
-            onClick={handleSend}
-            disabled={!message.trim() || disabled}
-            className="h-[52px] px-6"
-          >
-            <Send className="h-4 w-4" />
-          </Button>
         </div>
-        <p className="text-xs text-muted-foreground text-center mt-2">
+        <p className="text-xs text-muted-foreground text-center mt-2 hidden md:block">
           {isRecording ? 'Recording... Click mic to stop' : 'Press Enter to send, Shift + Enter for new line'}
         </p>
       </div>

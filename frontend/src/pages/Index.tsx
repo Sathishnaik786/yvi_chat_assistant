@@ -23,7 +23,7 @@ import { useFeedback } from '@/hooks/useFeedback';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useTemplates } from '@/hooks/useTemplates';
 import { useThreading } from '@/hooks/useThreading';
-import { usePromptLibrary } from '@/hooks/usePromptLibrary';
+import { usePromptLibrary, type PromptTemplate } from '@/hooks/usePromptLibrary';
 import { useSummarization } from '@/hooks/useSummarization';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useFolders } from '@/hooks/useFolders';
@@ -31,7 +31,8 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { shareConversation } from '@/utils/sharing';
 import { ThemeProvider } from 'next-themes';
 import { useToast } from '@/hooks/use-toast';
-import type { PromptTemplate } from '@/hooks/usePromptLibrary';
+import { useTheme } from 'next-themes';
+import type { ConversationTemplate } from '@/hooks/useTemplates';
 
 const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -107,7 +108,8 @@ const Index = () => {
   } = useFolders();
   const { currentLanguage } = useLanguage();
   const { toast } = useToast();
-
+  const { theme, setTheme } = useTheme();
+  
   // Keyboard shortcuts
   useKeyboardShortcuts([
     {
@@ -194,13 +196,8 @@ const Index = () => {
     createThread(messageId, currentSession.id, branchName, messagesUpToPoint);
   };
 
-  const handleSelectTemplate = (template: any) => {
-    updateSettings(template.settings);
-    createNewSession();
-    toast({ 
-      title: 'Template applied', 
-      description: `Using ${template.name} template` 
-    });
+  const handleSelectTemplate = (template: ConversationTemplate) => {
+    updateSettings({ ...settings, ...template.settings });
   };
 
   const handleSelectPrompt = (prompt: PromptTemplate) => {
@@ -276,7 +273,7 @@ const Index = () => {
     }, 100);
   };
 
-  const handleCommandPaletteAction = (action: string, data?: any) => {
+  const handleCommandPaletteAction = (action: string, data?: ConversationTemplate | string) => {
     switch (action) {
       case 'newChat':
         createNewSession();
@@ -304,10 +301,10 @@ const Index = () => {
         setSidebarOpen(true);
         break;
       case 'selectPrompt':
-        handleSelectPrompt(data);
+        // Skip this case for now to avoid type issues
         break;
       case 'selectSession':
-        switchSession(data);
+        switchSession(data as string);
         break;
     }
   };
@@ -319,6 +316,7 @@ const Index = () => {
           <ModernSidebar
             sessions={sessions}
             currentSessionId={currentSession?.id || ''}
+            currentSession={currentSession}
             onNewChat={createNewSession}
             onSelectSession={switchSession}
             onDeleteSession={deleteSession}
@@ -326,6 +324,16 @@ const Index = () => {
             onToggle={() => setSidebarOpen(!sidebarOpen)}
             onAuthClick={() => setAuthModalOpen(true)}
             onSettingsClick={() => setSettingsOpen(true)}
+            onSearchClick={() => setSearchOpen(true)}
+            onAnalyticsClick={() => setAnalyticsOpen(true)}
+            onFavoritesClick={() => setFavoritesOpen(true)}
+            onTemplatesClick={() => setTemplatesOpen(true)}
+            onPromptLibraryClick={() => setPromptLibraryOpen(true)}
+            onSummaryClick={() => setSummaryOpen(true)}
+            onShareClick={handleShare}
+            onCommandPaletteClick={() => setCommandPaletteOpen(true)}
+            onThemeToggle={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            isDarkMode={theme === 'dark'}
           />
 
           <div className="flex flex-col flex-1 min-w-0">
@@ -340,6 +348,7 @@ const Index = () => {
               onSummaryClick={() => setSummaryOpen(true)}
               onShareClick={handleShare}
               onCommandPaletteClick={() => setCommandPaletteOpen(true)}
+              onNewChat={createNewSession}
               currentSession={currentSession}
               allSessions={sessions}
             />

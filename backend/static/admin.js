@@ -85,7 +85,7 @@ async function fetchLogs() {
       {
         timestamp: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
         user_query: "About your company",
-        response: "YVI Soft Solutions is a leading IT consulting firm specializing in enterprise solutions.",
+        response: "YVI Tech Solutions is a leading IT consulting firm specializing in enterprise solutions.",
         category: "About",
         feedback: "positive"
       }

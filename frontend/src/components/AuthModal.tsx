@@ -62,7 +62,7 @@ export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Welcome to YVI Tech Assistant</DialogTitle>
+          <DialogTitle>Welcome to YVI Assistant</DialogTitle>
           <DialogDescription>
             Login or create an account to save your chat history
           </DialogDescription>

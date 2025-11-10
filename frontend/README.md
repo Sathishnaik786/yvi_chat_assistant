@@ -1,8 +1,8 @@
-# YVI Tech Assistant Chat Application
+# YVI Assistant Chat Application
 
 ## Project Overview
 
-This is a chat application for YVI Soft Solutions.
+This is a chat application for YVI Tech Solutions.
 
 ## How to edit this code?
 

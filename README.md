@@ -1,6 +1,36 @@
-# YVI Chatbot
+# YVI Assistant - Deployment Ready
 
-This is a chatbot application for YVI Soft Solutions built with React and Flask.
+This project is now ready for deployment:
+- Frontend: Netlify
+- Backend: Render
+
+## Deployment Files
+
+1. [`DEPLOYMENT_GUIDE.md`](DEPLOYMENT_GUIDE.md) - Complete deployment instructions
+2. [`backend/requirements.txt`](backend/requirements.txt) - Python dependencies for Render
+3. [`render.yaml`](render.yaml) - Render deployment configuration
+
+## Quick Start
+
+1. **Frontend (Netlify)**:
+   - Build with `npm run build` in the frontend directory
+   - Deploy the `dist` folder to Netlify
+
+2. **Backend (Render)**:
+   - Connect your GitHub repository to Render
+   - Render will automatically use the `render.yaml` configuration
+   - Set environment variables in Render dashboard:
+     - `SUPABASE_URL`
+     - `SUPABASE_KEY`
+     - `FRONTEND_URL` (your Netlify URL)
+
+## Environment Variables
+
+For local development, create a `.env` file in the backend directory with:
+```
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+```
 
 ## Features
 

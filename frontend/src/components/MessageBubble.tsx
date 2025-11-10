@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Copy, ThumbsUp, ThumbsDown, Check, Star, GitBranch } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -9,6 +9,25 @@ import { ThreadingDialog } from './ThreadingDialog';
 import ReactMarkdown from 'react-markdown';
 import type { Message } from '@/hooks/useChat';
 import { cn } from '@/lib/utils';
+
+// Typing effect component for bot messages
+const TypingEffect = ({ text, speed = 30 }: { text: string; speed?: number }) => {
+  const [displayedText, setDisplayedText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, speed);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [currentIndex, text, speed]);
+
+  return <ReactMarkdown>{displayedText}</ReactMarkdown>;
+};
 
 interface MessageBubbleProps {
   message: Message;
@@ -89,17 +108,21 @@ export const MessageBubble = ({
       id={`message-${message.id}`}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`px-4 py-3 ${
-        isUser ? 'ml-auto' : 'mr-auto'
-      } max-w-[85%] group transition-all`}
+      className={`px-2 md:px-4 py-2 md:py-3 ${
+        isUser ? 'ml-auto float-right clear-both' : 'mr-auto float-left clear-both'
+      } max-w-[90%] md:max-w-[85%] group transition-all`}
     >
-      <div className={`rounded-2xl px-4 py-3 ${
+      <div className={`rounded-2xl px-3 md:px-4 py-2 md:py-3 inline-block ${
         isUser 
-          ? 'bg-primary text-primary-foreground ml-auto' 
+          ? 'bg-primary text-primary-foreground' 
           : 'bg-muted'
       }`}>
-        <div className="prose prose-sm dark:prose-invert max-w-none break-words">
-          <ReactMarkdown>{message.content}</ReactMarkdown>
+        <div className="prose prose-xs md:prose-sm dark:prose-invert max-w-none break-words">
+          {isUser ? (
+            <ReactMarkdown>{message.content}</ReactMarkdown>
+          ) : (
+            <TypingEffect text={message.content} speed={20} />
+          )}
         </div>
       </div>
 
@@ -108,7 +131,7 @@ export const MessageBubble = ({
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 px-2"
+            className="h-7 md:h-8 px-1 md:px-2 touch-target"
             onClick={handleCopy}
             title="Copy message"
           >
@@ -124,7 +147,7 @@ export const MessageBubble = ({
               variant="ghost"
               size="sm"
               className={cn(
-                "h-7 px-2",
+                "h-7 md:h-8 px-1 md:px-2 touch-target",
                 isFavorite && "text-yellow-500"
               )}
               onClick={handleToggleFavorite}
@@ -138,13 +161,13 @@ export const MessageBubble = ({
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 px-2 relative"
+              className="h-7 md:h-8 px-1 md:px-2 relative touch-target"
               onClick={() => setThreadDialogOpen(true)}
               title="Create thread"
             >
               <GitBranch className="h-3 w-3" />
               {threadCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[8px] md:text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
                   {threadCount}
                 </span>
               )}
@@ -157,7 +180,7 @@ export const MessageBubble = ({
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  "h-7 px-2",
+                  "h-7 md:h-8 px-1 md:px-2 touch-target",
                   feedback?.rating === 'positive' && "text-green-500"
                 )}
                 onClick={() => handleFeedbackClick('positive')}
@@ -169,7 +192,7 @@ export const MessageBubble = ({
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  "h-7 px-2",
+                  "h-7 md:h-8 px-1 md:px-2 touch-target",
                   feedback?.rating === 'negative' && "text-red-500"
                 )}
                 onClick={() => handleFeedbackClick('negative')}

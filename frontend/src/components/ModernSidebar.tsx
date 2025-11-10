@@ -13,7 +13,16 @@ import {
   Settings, 
   HelpCircle, 
   LogOut,
-  MessageSquare
+  MessageSquare,
+  Command,
+  BookOpen,
+  FileCode,
+  Star,
+  FileText,
+  Share2,
+  BarChart3,
+  Moon,
+  Sun
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
@@ -22,6 +31,7 @@ import type { ChatSession } from '@/hooks/useChat';
 interface ModernSidebarProps {
   sessions: ChatSession[];
   currentSessionId: string;
+  currentSession?: ChatSession; // Add this new prop
   onNewChat: () => void;
   onSelectSession: (id: string) => void;
   onDeleteSession: (id: string) => void;
@@ -29,17 +39,40 @@ interface ModernSidebarProps {
   onToggle: () => void;
   onAuthClick: () => void;
   onSettingsClick: () => void;
+  // Additional props for mobile settings menu
+  onSearchClick: () => void;
+  onAnalyticsClick: () => void;
+  onFavoritesClick: () => void;
+  onTemplatesClick: () => void;
+  onPromptLibraryClick: () => void;
+  onSummaryClick: () => void;
+  onShareClick: () => void;
+  onCommandPaletteClick: () => void;
+  onThemeToggle: () => void;
+  isDarkMode: boolean;
 }
 
 export const ModernSidebar = ({
   sessions,
   currentSessionId,
+  currentSession, // Add this new prop
   onNewChat,
   onSelectSession,
+  onDeleteSession,
   isOpen,
   onToggle,
   onAuthClick,
   onSettingsClick,
+  onSearchClick,
+  onAnalyticsClick,
+  onFavoritesClick,
+  onTemplatesClick,
+  onPromptLibraryClick,
+  onSummaryClick,
+  onShareClick,
+  onCommandPaletteClick,
+  onThemeToggle,
+  isDarkMode,
 }: ModernSidebarProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const { user, logout, isAuthenticated } = useAuth();
@@ -64,8 +97,9 @@ export const ModernSidebar = ({
           "fixed left-0 top-0 z-50 h-screen bg-sidebar border-r border-sidebar-border",
           "transition-all duration-300 ease-in-out",
           "flex flex-col",
-          isOpen ? "w-72" : "w-16",
-          "lg:relative lg:z-auto"
+          isOpen ? "w-64 md:w-72" : "w-16",
+          "lg:relative lg:z-auto lg:translate-x-0",
+          !isOpen && "-translate-x-full lg:translate-x-0"
         )}
       >
         {/* Header */}
@@ -73,9 +107,11 @@ export const ModernSidebar = ({
           {isOpen ? (
             <>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center">
-                  <span className="text-sidebar-primary-foreground font-bold text-sm">YVI</span>
-                </div>
+                <img 
+                  src="/logo.png" 
+                  alt="YVI Logo" 
+                  className="w-8 h-8 rounded-lg"
+                />
                 <span className="font-semibold text-sidebar-foreground">YVI Tech</span>
               </div>
               <Button
@@ -108,14 +144,6 @@ export const ModernSidebar = ({
         <div className="p-2 space-y-1">
           {isOpen ? (
             <>
-              <Button
-                onClick={onNewChat}
-                className="w-full justify-start gap-2 bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90"
-              >
-                <Plus className="h-4 w-4" />
-                New Chat
-              </Button>
-
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-sidebar-foreground/50" />
                 <Input
@@ -125,10 +153,19 @@ export const ModernSidebar = ({
                   className="pl-8 bg-sidebar-accent border-sidebar-border text-sidebar-foreground placeholder:text-sidebar-foreground/50"
                 />
               </div>
+              
+              <Button
+                onClick={onNewChat}
+                variant="ghost"
+                className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
+              >
+                <Plus className="h-4 w-4" />
+                New Chat
+              </Button>
 
               <Button
                 variant="ghost"
-                className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent"
+                className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
               >
                 <Library className="h-4 w-4" />
                 Library
@@ -136,20 +173,6 @@ export const ModernSidebar = ({
             </>
           ) : (
             <div className="space-y-1">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    onClick={onNewChat}
-                    variant="ghost"
-                    size="icon"
-                    className="w-full text-sidebar-foreground hover:bg-sidebar-accent"
-                  >
-                    <Plus className="h-5 w-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="right">New Chat</TooltipContent>
-              </Tooltip>
-
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -162,7 +185,7 @@ export const ModernSidebar = ({
                 </TooltipTrigger>
                 <TooltipContent side="right">Search</TooltipContent>
               </Tooltip>
-
+              
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -195,7 +218,7 @@ export const ModernSidebar = ({
                     onClick={() => onSelectSession(session.id)}
                     className={cn(
                       "w-full justify-start gap-2 text-left font-normal",
-                      "text-sidebar-foreground hover:bg-sidebar-accent",
+                      "text-sidebar-foreground hover:bg-sidebar-accent touch-target",
                       currentSessionId === session.id && "bg-sidebar-accent"
                     )}
                   >
@@ -215,7 +238,7 @@ export const ModernSidebar = ({
                       size="icon"
                       onClick={() => onSelectSession(session.id)}
                       className={cn(
-                        "w-full text-sidebar-foreground hover:bg-sidebar-accent",
+                        "w-full text-sidebar-foreground hover:bg-sidebar-accent touch-target no-select",
                         currentSessionId === session.id && "bg-sidebar-accent"
                       )}
                     >
@@ -243,7 +266,7 @@ export const ModernSidebar = ({
                   </div>
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent"
+                    className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
                     onClick={onSettingsClick}
                   >
                     <Settings className="h-4 w-4" />
@@ -251,14 +274,14 @@ export const ModernSidebar = ({
                   </Button>
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent"
+                    className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
                   >
                     <HelpCircle className="h-4 w-4" />
                     Help
                   </Button>
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent"
+                    className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
                     onClick={logout}
                   >
                     <LogOut className="h-4 w-4" />
@@ -266,12 +289,113 @@ export const ModernSidebar = ({
                   </Button>
                 </>
               ) : (
-                <Button
-                  onClick={onAuthClick}
-                  className="w-full bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90"
-                >
-                  Login / Sign Up
-                </Button>
+                <>
+                  {/* Mobile-only settings menu with all navbar icons */}
+                  <div className="lg:hidden space-y-1">
+                    <div className="px-2 py-1 text-xs font-medium text-sidebar-foreground/70 uppercase tracking-wider">
+                      Tools
+                    </div>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
+                      onClick={onCommandPaletteClick}
+                    >
+                      <Command className="h-4 w-4" />
+                      Command Palette
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
+                      onClick={onPromptLibraryClick}
+                    >
+                      <BookOpen className="h-4 w-4" />
+                      Prompt Library
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
+                      onClick={onTemplatesClick}
+                    >
+                      <FileCode className="h-4 w-4" />
+                      Templates
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
+                      onClick={onFavoritesClick}
+                    >
+                      <Star className="h-4 w-4" />
+                      Favorites
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
+                      onClick={onSummaryClick}
+                    >
+                      <FileText className="h-4 w-4" />
+                      Summarize
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
+                      onClick={onShareClick}
+                      disabled={!currentSession || currentSession.messages.length === 0}
+                    >
+                      <Share2 className="h-4 w-4" />
+                      Share
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
+                      onClick={onSearchClick}
+                    >
+                      <Search className="h-4 w-4" />
+                      Search
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
+                      onClick={onAnalyticsClick}
+                    >
+                      <BarChart3 className="h-4 w-4" />
+                      Analytics
+                    </Button>
+                    <div className="px-2 py-1 text-xs font-medium text-sidebar-foreground/70 uppercase tracking-wider mt-2">
+                      Settings
+                    </div>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
+                      onClick={onThemeToggle}
+                    >
+                      {isDarkMode ? (
+                        <>
+                          <Sun className="h-4 w-4" />
+                          Light Mode
+                        </>
+                      ) : (
+                        <>
+                          <Moon className="h-4 w-4" />
+                          Dark Mode
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-2 text-sidebar-foreground hover:bg-sidebar-accent touch-target"
+                      onClick={onSettingsClick}
+                    >
+                      <Settings className="h-4 w-4" />
+                      App Settings
+                    </Button>
+                  </div>
+                  <Button
+                    onClick={onAuthClick}
+                    className="w-full border border-sidebar-primary text-sidebar-primary bg-transparent hover:bg-sidebar-primary/10 rounded-xl touch-target"
+                  >
+                    Login / Sign Up
+                  </Button>
+                </>
               )}
             </div>
           ) : (
@@ -281,7 +405,7 @@ export const ModernSidebar = ({
                   variant="ghost"
                   size="icon"
                   onClick={isAuthenticated ? onSettingsClick : onAuthClick}
-                  className="w-full text-sidebar-foreground hover:bg-sidebar-accent"
+                  className="w-full text-sidebar-foreground hover:bg-sidebar-accent touch-target no-select"
                 >
                   <User className="h-5 w-5" />
                 </Button>

@@ -24,24 +24,24 @@ interface ChatWindowProps {
 
 const EXAMPLE_PROMPTS = [
   {
-    icon: '💡',
-    title: 'Explain a concept',
-    prompt: 'Explain quantum computing in simple terms',
+    icon: '🏢',
+    title: 'About Company',
+    prompt: 'Tell me about YVI Tech Solutions',
   },
   {
-    icon: '🎨',
-    title: 'Creative writing',
-    prompt: 'Write a short story about a robot learning to paint',
+    icon: '🛠️',
+    title: 'Our Services',
+    prompt: 'What services do you offer?',
   },
   {
-    icon: '💻',
-    title: 'Code help',
-    prompt: 'How do I optimize a React component for performance?',
+    icon: '🌐',
+    title: 'Domains & Expertise',
+    prompt: 'What domains do you specialize in?',
   },
   {
-    icon: '🌍',
-    title: 'General knowledge',
-    prompt: 'What are the main causes of climate change?',
+    icon: '📍',
+    title: 'Locations & Contact',
+    prompt: 'Where are you located and how can I contact you?',
   },
 ];
 
@@ -69,28 +69,32 @@ export const ChatWindow = ({
   }, [messages, isTyping]);
 
   return (
-    <ScrollArea className="flex-1 chat-scroll" ref={scrollRef}>
-      <div className="max-w-4xl mx-auto">
+    <ScrollArea className="flex-1 chat-scroll smooth-scroll" ref={scrollRef}>
+      <div className="max-w-4xl mx-auto mobile-responsive">
         {messages.length === 0 && !isTyping && (
-          <div className="flex items-center justify-center h-full min-h-[400px] px-4">
-            <div className="text-center space-y-6 max-w-3xl">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-                <span className="text-2xl">🤖</span>
+          <div className="flex items-center justify-center h-full min-h-[300px] md:min-h-[400px] px-2 md:px-4">
+            <div className="text-center space-y-4 md:space-y-6 max-w-3xl">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                <img 
+                  src="/logo.png" 
+                  alt="YVI Assistant Logo" 
+                  className="w-12 h-8 md:w-12 md:h-12 object-contain"
+                />
               </div>
-              <h2 className="text-2xl font-semibold">Welcome to YVI Tech Assistant</h2>
-              <p className="text-muted-foreground max-w-md mx-auto">
-                Start a conversation by typing your message below or try one of these examples:
+              <h2 className="text-xl md:text-2xl font-semibold">Welcome to YVI Assistant</h2>
+              <p className="text-muted-foreground max-w-md mx-auto text-sm md:text-base">
+                I'm here to help you learn about our company, services, and expertise. Ask me anything about YVI Tech Solutions:
               </p>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 mt-4 md:mt-6">
                 {EXAMPLE_PROMPTS.map((example, index) => (
                   <button
                     key={index}
                     onClick={() => onExampleClick(example.prompt)}
-                    className="p-4 rounded-lg border border-border bg-card hover:bg-accent transition-colors text-left group"
+                    className="p-3 md:p-4 rounded-lg border border-border bg-card hover:bg-accent transition-colors text-left group touch-target"
                   >
-                    <div className="flex items-start gap-3">
-                      <span className="text-2xl">{example.icon}</span>
+                    <div className="flex items-start gap-2 md:gap-3">
+                      <span className="text-xl md:text-2xl">{example.icon}</span>
                       <div className="flex-1">
                         <h3 className="font-medium text-sm mb-1 group-hover:text-primary transition-colors">
                           {example.title}

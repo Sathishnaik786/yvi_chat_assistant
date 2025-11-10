@@ -126,4 +126,50 @@ All colors MUST be HSL.
     background-color: hsl(var(--muted));
     border-radius: 3px;
   }
+  
+  /* Responsive fixes for mobile */
+  .mobile-responsive {
+    @apply w-full max-w-full px-2;
+  }
+  
+  .mobile-full-width {
+    @apply w-full max-w-full;
+  }
+  
+  .mobile-padding {
+    @apply px-2;
+  }
+  
+  .mobile-min-padding {
+    @apply px-1 py-1;
+  }
+  
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Prevent text selection on interactive elements */
+  .no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Smoother scrolling for mobile */
+  .smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Hide scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }

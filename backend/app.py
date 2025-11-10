@@ -11,9 +11,20 @@ from supabase_client import supabase, get_knowledge_entry, get_all_categories, g
 
 app = Flask(__name__)
 
-# Enable CORS for development
+# Enable CORS for development and production
 if CORS:
-    CORS(app, origins=["http://localhost:8080", "http://127.0.0.1:8080"])
+    # Allow localhost for development and Netlify for production
+    cors_origins = [
+        "http://localhost:8080", 
+        "http://127.0.0.1:8080",
+        "https://*.netlify.app"
+    ]
+    # If FRONTEND_URL is set (for production), add it to allowed origins
+    frontend_url = os.environ.get('FRONTEND_URL')
+    if frontend_url:
+        cors_origins.append(frontend_url)
+    
+    CORS(app, origins=cors_origins)
 
 # ----------------------------
 # Knowledge base (with YVI data in paragraph format)
@@ -102,7 +113,7 @@ def chat():
 
     # ✅ If we get here, no match was found in Supabase
     response_data = {
-        "reply": "Sorry, I don't have information about that topic. Please ask about Our Services, Core Capabilities, Other Capabilities, Our Process, About Us, Contact, or Location."
+        "reply": "Sorry, I don't have information about that topic. Please ask about our company, services, domains, or location."
     }
     log_chat_interaction(message, response_data["reply"], "no_match")
     return jsonify(response_data)
@@ -167,7 +178,7 @@ def api_logs():
         {
             "timestamp": "2023-06-13T11:10:00Z",
             "user_query": "About your company",
-            "response": "YVI Soft Solutions is a leading IT consulting firm specializing in enterprise solutions.",
+            "response": "YVI Tech Solutions is a leading IT consulting firm specializing in enterprise solutions.",
             "category": "About",
             "feedback": "positive"
         }
@@ -203,6 +214,12 @@ def serve_static(path):
             return send_from_directory('build', 'index.html')
 
 if __name__ == "__main__":
-    # Set environment variable for development
-    os.environ['FLASK_ENV'] = 'development'
-    app.run(debug=True, port=5000)
+    # Check if we're running on Render (production) or locally (development)
+    if os.environ.get('FLASK_ENV') == 'production':
+        # Use the PORT environment variable provided by Render
+        port = int(os.environ.get('PORT', 5000))
+        app.run(host='0.0.0.0', port=port, debug=False)
+    else:
+        # Set environment variable for development
+        os.environ['FLASK_ENV'] = 'development'
+        app.run(debug=True, port=5000)

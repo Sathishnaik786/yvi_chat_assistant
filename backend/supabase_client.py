@@ -126,7 +126,7 @@ def initialize_knowledge_base():
                     "category": "About",
                     "title": "About Us",
                     "keywords": ["about", "company", "info"],
-                    "description": "YVI Soft Solutions is a technology company delivering IT consulting, software development, and digital solutions tailored for enterprises worldwide."
+                    "description": "YVI Tech Solutions is a technology company delivering IT consulting, software development, and digital solutions tailored for enterprises worldwide."
                 },
                 {
                     "category": "Contact",
