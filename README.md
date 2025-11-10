@@ -1,98 +1,86 @@
-# YVI Assistant - Deployment Ready
+# YVI Assistant - AI Chatbot Platform
 
-This project is now ready for deployment:
-- Frontend: Netlify
-- Backend: Render
+YVI Assistant is a modern AI chatbot platform built with React (TypeScript) frontend and Flask backend, integrated with Supabase for dynamic knowledge management. The application is ready for deployment on Netlify (frontend) and Render (backend).
 
-## Deployment Files
+## Project Structure
 
-1. [`DEPLOYMENT_GUIDE.md`](DEPLOYMENT_GUIDE.md) - Complete deployment instructions
-2. [`backend/requirements.txt`](backend/requirements.txt) - Python dependencies for Render
-3. [`render.yaml`](render.yaml) - Render deployment configuration
-
-## Quick Start
-
-1. **Frontend (Netlify)**:
-   - Build with `npm run build` in the frontend directory
-   - Deploy the `dist` folder to Netlify
-
-2. **Backend (Render)**:
-   - Connect your GitHub repository to Render
-   - Render will automatically use the `render.yaml` configuration
-   - Set environment variables in Render dashboard:
-     - `SUPABASE_URL`
-     - `SUPABASE_KEY`
-     - `FRONTEND_URL` (your Netlify URL)
-
-## Environment Variables
-
-For local development, create a `.env` file in the backend directory with:
 ```
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_supabase_key
+YVI TECH Assistant/
+├── frontend/           # React TypeScript application
+│   ├── src/            # Source code
+│   ├── public/         # Static assets
+│   └── index.html      # Entry point
+├── backend/            # Flask Python application
+│   ├── app.py          # Main application
+│   ├── supabase_client.py # Supabase integration
+│   └── templates/      # HTML templates
+├── DEPLOYMENT_GUIDE.md # Deployment instructions
+└── render.yaml         # Render deployment config
 ```
 
 ## Features
 
-- Chat interface with AI assistant
-- Integration with Supabase for knowledge base
-- Modern UI with dark/light theme support
-- Responsive design for all devices
+- **Modern Chat Interface**: Clean, responsive UI with dark/light theme support
+- **AI-Powered Responses**: Context-aware answers from company knowledge base
+- **Supabase Integration**: Dynamic knowledge management and chat logging
+- **Multi-Platform Deployment**: Netlify for frontend, Render for backend
+- **Real-time Analytics**: Chat interaction tracking and insights
+- **Mobile-Optimized**: Fully responsive design for all devices
+- **Voice Input Support**: Microphone integration for voice messages
+- **Export Functionality**: Share and export conversation histories
 
 ## Technologies Used
 
-- Frontend: React, TypeScript, Vite
-- Backend: Flask (Python)
-- Database: Supabase
-- Styling: Tailwind CSS
+### Frontend
+- React with TypeScript
+- Vite build tool
+- Tailwind CSS for styling
+- Framer Motion for animations
+- React Router for navigation
+- Lucide React for icons
 
-## Setup
+### Backend
+- Flask (Python)
+- Supabase (PostgreSQL)
+- python-dotenv for environment management
+- Flask-CORS for cross-origin requests
 
-1. Clone the repository
-2. Install dependencies for both frontend and backend
-3. Configure environment variables
-4. Run the application
+### Deployment
+- Netlify (Frontend)
+- Render (Backend)
+- GitHub for version control
 
-## Deployment
+## Quick Start
 
-The application can be deployed to any platform that supports Python and Node.js applications.
-
-## Features
-
-- Dynamic chatbot responses fetched from Supabase database
-- Static fallback knowledge base for when Supabase is not configured
-- Chat interaction logging for analytics
-- Responsive web interface with modals and quick buttons
-- Loading indicators and typing effects
-
-## Prerequisites
-
+### Prerequisites
+- Node.js 16+ and npm
 - Python 3.7+
-- Flask
 - Supabase account
 
-## Installation
+### Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-1. Clone the repository
-2. Install required packages:
-   ```bash
-   pip install flask supabase python-dotenv
-   ```
+### Backend Setup
+```bash
+cd backend
+pip install -r requirements.txt
+# Create .env file with Supabase credentials
+python app.py
+```
 
-## Supabase Setup
+### Environment Variables
+Create a `.env` file in the backend directory:
+```
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_KEY=your_supabase_anon_key
+FRONTEND_URL=http://localhost:3000  # For local development
+```
 
-1. Create a Supabase account at https://supabase.io
-2. Create a new project
-3. Get your Project URL and anon key from the API settings
-4. Update the `.env` file with your credentials:
-   ```
-   SUPABASE_URL=your_supabase_project_url
-   SUPABASE_KEY=your_supabase_anon_key
-   ```
-
-## Database Schema
-
-Create the following tables in your Supabase database:
+## Supabase Database Schema
 
 ### chatbot_knowledge
 ```sql
@@ -117,35 +105,41 @@ CREATE TABLE chatbot_logs (
 );
 ```
 
-## Initialize Data
+## Deployment
 
-Run the initialization script to populate the knowledge base:
-```bash
-python initialize_supabase.py
-```
+### Frontend (Netlify)
+1. Build the React app: `npm run build` in the frontend directory
+2. Deploy the `dist` folder to Netlify
+3. Set environment variables in Netlify dashboard if needed
 
-## Running the Application
-
-```bash
-python app.py
-```
-
-The application will be available at http://127.0.0.1:5000
-
-## How It Works
-
-1. When Supabase credentials are configured, the chatbot fetches responses from the `chatbot_knowledge` table
-2. If Supabase is not configured or unavailable, it falls back to the static knowledge base
-3. All chat interactions are logged to the `chatbot_logs` table for analytics
-4. The frontend remains unchanged and works with both dynamic and static data sources
+### Backend (Render)
+1. Connect your GitHub repository to Render
+2. Render will automatically use the `render.yaml` configuration
+3. Set environment variables in Render dashboard:
+   - `SUPABASE_URL`
+   - `SUPABASE_KEY`
+   - `FRONTEND_URL` (your Netlify URL)
 
 ## API Endpoints
 
 - `GET /` - Serve the chatbot interface
 - `POST /chat` - Process chat messages and return responses
+- `GET /health` - Health check endpoint
+
+## Development
+
+The application uses a dual-server setup during development:
+- Frontend runs on http://localhost:3000 (Vite)
+- Backend runs on http://localhost:5000 (Flask)
+- API requests are proxied from frontend to backend
 
 ## Customization
 
-- Modify the knowledge base data in Supabase dashboard
-- Update the UI in `templates/index.html` and `static/` files
-- Extend functionality in `app.py`
+- Modify knowledge base data in Supabase dashboard
+- Update UI components in `frontend/src/components/`
+- Extend backend functionality in `backend/app.py`
+- Modify styling in `frontend/src/index.css` and Tailwind config
+
+## License
+
+This project is proprietary to YVI Tech Solutions. All rights reserved.
