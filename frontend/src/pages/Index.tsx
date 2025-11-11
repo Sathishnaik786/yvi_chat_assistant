@@ -366,7 +366,7 @@ const Index = () => {
                 />
               </div>
               
-              <div className="lg:static sticky bottom-0 left-0 right-0 z-10 bg-background border-t border-border lg:border-t-0 lg:bg-transparent lg:z-auto">
+              <div className="lg:static sticky bottom-0 left-0 right-0 z-10 bg-transparent border-t border-border lg:border-t-0 lg:bg-transparent lg:z-auto">
                 <InputBar
                   onSend={handleSendMessage}
                   disabled={isTyping}
