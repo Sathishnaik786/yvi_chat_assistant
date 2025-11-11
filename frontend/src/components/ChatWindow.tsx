@@ -63,15 +63,24 @@ export const ChatWindow = ({
   getThreadCount,
 }: ChatWindowProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const prevMessagesLength = useRef(messages.length);
 
   useEffect(() => {
     const scrollToTop = () => {
       if (scrollRef.current) {
-        scrollRef.current.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
+        // Access the viewport element directly
+        const viewport = scrollRef.current.children[0]; // The first child is the Viewport
+        if (viewport) {
+          viewport.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        } else {
+          // Fallback to scrolling the parent element
+          scrollRef.current.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }
       }
     };
     
