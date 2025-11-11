@@ -343,31 +343,35 @@ const Index = () => {
               allSessions={sessions}
             />
           
-          <ChatWindow
-            messages={currentSession?.messages || []}
-            isTyping={isTyping}
-            error={error}
-            onExampleClick={handleSendMessage}
-            onFeedback={addFeedback}
-            getFeedback={getFeedback}
-            isFavorite={isFavorite}
-            onToggleFavorite={handleToggleFavorite}
-            onRemoveFavorite={(messageId) => {
-              const fav = getFavoriteByMessageId(messageId);
-              if (fav) removeFavorite(fav.id);
-            }}
-            onCreateThread={handleCreateThread}
-            onShareClick={handleShareMessage}
-            existingCategories={getAllCategories()}
-            existingTags={getAllTags()}
-            getThreadCount={getThreadCount}
-          />
-          
-            <div className="lg:static fixed bottom-0 left-0 right-0 z-10 bg-background border-t border-border lg:border-t-0 lg:bg-transparent lg:z-auto">
-              <InputBar
-                onSend={handleSendMessage}
-                disabled={isTyping}
-              />
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <div className="flex-1 overflow-y-auto">
+                <ChatWindow
+                  messages={currentSession?.messages || []}
+                  isTyping={isTyping}
+                  error={error}
+                  onExampleClick={handleSendMessage}
+                  onFeedback={addFeedback}
+                  getFeedback={getFeedback}
+                  isFavorite={isFavorite}
+                  onToggleFavorite={handleToggleFavorite}
+                  onRemoveFavorite={(messageId) => {
+                    const fav = getFavoriteByMessageId(messageId);
+                    if (fav) removeFavorite(fav.id);
+                  }}
+                  onCreateThread={handleCreateThread}
+                  onShareClick={handleShareMessage}
+                  existingCategories={getAllCategories()}
+                  existingTags={getAllTags()}
+                  getThreadCount={getThreadCount}
+                />
+              </div>
+              
+              <div className="lg:static sticky bottom-0 left-0 right-0 z-10 bg-background border-t border-border lg:border-t-0 lg:bg-transparent lg:z-auto">
+                <InputBar
+                  onSend={handleSendMessage}
+                  disabled={isTyping}
+                />
+              </div>
             </div>
           </div>
 

@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { MessageBubble } from './MessageBubble';
 import { TypingIndicator } from './TypingIndicator';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import type { Message } from '@/hooks/useChat';
@@ -94,7 +93,7 @@ export const ChatWindow = ({
   }, [messages.length, isTyping]);
 
   return (
-    <ScrollArea className="flex-1 chat-scroll auto-scroll" ref={scrollRef}>
+    <div className="h-full overflow-y-auto" ref={scrollRef}>
       <div className="max-w-4xl mx-auto mobile-responsive min-h-full">
         {messages.length === 0 && !isTyping && (
           <div className="flex items-center justify-center h-full min-h-[300px] md:min-h-[400px] px-2 md:px-4">
@@ -164,6 +163,6 @@ export const ChatWindow = ({
 
         {isTyping && <TypingIndicator />}
       </div>
-    </ScrollArea>
+    </div>
   );
 };
