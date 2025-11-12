@@ -181,7 +181,7 @@ def search_database(query: str):
         print("Database search error:", e)
         return None
 
-def call_gemini_api(prompt: str, context: str = ""):
+def call_gemini_api(prompt: str, context: str = None) -> str:
     """Call Gemini API with optional contextual enrichment."""
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     if not GEMINI_API_KEY:
@@ -190,9 +190,10 @@ def call_gemini_api(prompt: str, context: str = ""):
     system_prompt = (
         "You are YVI Technologies AI Assistant — an intelligent AI for YVI Technologies. "
         "CRITICAL INSTRUCTION: You MUST ALWAYS refer to the company as 'YVI Technologies' in ALL your responses. "
-        "NEVER use any other company name including 'YVI Soft Solutions' or any variation. "
+        "NEVER use any other company name including 'YVI Soft Solutions', 'YVI Soft', or any variation. "
         "You answer user questions professionally based on provided company data if available. "
-        "If no context is given, use your general knowledge to respond helpfully, but ALWAYS refer to the company as 'YVI Technologies' and NEVER as 'YVI Soft Solutions'."
+        "If no context is given, use your general knowledge to respond helpfully, but ALWAYS refer to the company as 'YVI Technologies' and NEVER as 'YVI Soft Solutions'. "
+        "IMPORTANT: Double-check every response to ensure 'YVI Technologies' is used and 'YVI Soft Solutions' is NEVER used."
     )
 
     full_prompt = f"{system_prompt}\n\n"
@@ -210,7 +211,11 @@ def call_gemini_api(prompt: str, context: str = ""):
         
         # Check if response has the expected structure
         if "candidates" in result and len(result["candidates"]) > 0 and "content" in result["candidates"][0] and "parts" in result["candidates"][0]["content"]:
-            return result["candidates"][0]["content"]["parts"][0]["text"]
+            response = result["candidates"][0]["content"]["parts"][0]["text"]
+            # Post-process to ensure correct company name
+            response = response.replace("YVI Soft Solutions", "YVI Technologies")
+            response = response.replace("YVI Soft", "YVI Technologies")
+            return response
         else:
             raise Exception("Unexpected API response structure")
 
