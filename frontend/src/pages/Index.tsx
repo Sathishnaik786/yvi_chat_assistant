@@ -69,6 +69,7 @@ const Index = () => {
     deleteSession,
     clearAllSessions,
     updateSessionOrder,
+    updateSession,
     bulkDeleteSessions,
     bulkUpdateSessions,
   } = useChat();
