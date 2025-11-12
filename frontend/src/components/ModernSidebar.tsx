@@ -21,11 +21,20 @@ import {
   FileText,
   BarChart3,
   Moon,
-  Sun
+  Sun,
+  MoreVertical,
+  Trash2
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import type { ChatSession } from '@/hooks/useChat';
+
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
 
 interface ModernSidebarProps {
   sessions: ChatSession[];
@@ -207,19 +216,45 @@ export const ModernSidebar = ({
                 </p>
               ) : (
                 filteredSessions.map((session) => (
-                  <Button
-                    key={session.id}
-                    variant="ghost"
-                    onClick={() => onSelectSession(session.id)}
-                    className={cn(
-                      "w-full justify-start gap-2 text-left font-normal",
-                      "text-sidebar-foreground hover:bg-sidebar-accent touch-target",
-                      currentSessionId === session.id && "bg-sidebar-accent"
-                    )}
-                  >
-                    <MessageSquare className="h-4 w-4 shrink-0" />
-                    <span className="truncate">{session.title}</span>
-                  </Button>
+                  <div key={session.id} className="flex items-center group">
+                    <Button
+                      variant="ghost"
+                      onClick={() => onSelectSession(session.id)}
+                      className={cn(
+                        "flex-1 justify-start gap-2 text-left font-normal",
+                        "text-sidebar-foreground hover:bg-sidebar-accent touch-target",
+                        currentSessionId === session.id && "bg-sidebar-accent"
+                      )}
+                    >
+                      <MessageSquare className="h-4 w-4 shrink-0" />
+                      <span className="truncate">{session.title}</span>
+                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem 
+                          className="text-red-600"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (window.confirm('Are you sure you want to delete this chat? This action cannot be undone.')) {
+                              onDeleteSession(session.id);
+                            }
+                          }}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete Chat
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 ))
               )}
             </div>
