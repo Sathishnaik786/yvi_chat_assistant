@@ -25,7 +25,8 @@ import {
   MoreVertical,
   Trash2,
   FileArchive,
-  Pencil
+  Pencil,
+  Flag
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
@@ -300,6 +301,19 @@ export const ModernSidebar = ({
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Handle report action
+                            console.log('Report chat:', session.id);
+                            // You can implement the actual report functionality here
+                            alert('Chat reported. Thank you for helping us improve!');
+                          }}
+                        >
+                          <Flag className="mr-2 h-4 w-4" />
+                          Report
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
                           className="text-red-600"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -375,6 +389,19 @@ export const ModernSidebar = ({
                           >
                             <FileArchive className="mr-2 h-4 w-4" />
                             Unarchive
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // Handle report action
+                              console.log('Report archived chat:', session.id);
+                              // You can implement the actual report functionality here
+                              alert('Chat reported. Thank you for helping us improve!');
+                            }}
+                          >
+                            <Flag className="mr-2 h-4 w-4" />
+                            Report
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem 
