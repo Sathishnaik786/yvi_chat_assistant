@@ -103,8 +103,13 @@ export const MessageBubble = ({
     }
     if (rating === 'negative') {
       toast({ title: 'Feedback submitted', description: 'Thank you for helping us improve!' });
+      // Hide the dislike button after submitting negative feedback
+      setTimeout(() => {
+        setFeedbackDialogOpen(false);
+      }, 100);
+    } else {
+      setFeedbackDialogOpen(false);
     }
-    setFeedbackDialogOpen(false);
   };
 
   const handleShareClick = () => {
@@ -176,7 +181,7 @@ export const MessageBubble = ({
               <Copy className="h-3 w-3" />
             )}
           </Button>
-          
+        
           {onFeedback && (
             <>
               <Button
@@ -196,18 +201,21 @@ export const MessageBubble = ({
                   Thank you for your feedback!
                 </div>
               )}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 md:h-8 px-1 md:px-2 touch-target"
-                onClick={() => handleFeedbackClick('negative')}
-                title="Bad response"
-              >
-                <ThumbsDown className="h-3 w-3" />
-              </Button>
+              {/* Only show dislike button if there's no negative feedback yet */}
+              {feedback?.rating !== 'negative' && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 md:h-8 px-1 md:px-2 touch-target"
+                  onClick={() => handleFeedbackClick('negative')}
+                  title="Bad response"
+                >
+                  <ThumbsDown className="h-3 w-3" />
+                </Button>
+              )}
             </>
           )}
-          
+        
           {(onShareClick || shareCode) && (
             <Button
               variant="ghost"
