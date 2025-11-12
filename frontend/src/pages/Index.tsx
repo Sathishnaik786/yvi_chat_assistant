@@ -358,7 +358,7 @@ const Index = () => {
             isDarkMode={theme === 'dark'}
           />
 
-          <div className="flex flex-col flex-1 min-w-0 relative">
+          <div className="flex flex-col flex-1 min-w-0 relative h-full" style={{ contain: 'layout' }}>
             <Header
               onMenuClick={() => setSidebarOpen(!sidebarOpen)}
               onSettingsClick={() => setSettingsOpen(true)}
@@ -374,8 +374,8 @@ const Index = () => {
               allSessions={sessions}
             />
           
-            <div className="flex-1 flex flex-col overflow-hidden">
-              <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 flex flex-col" style={{ height: 'calc(100vh - 112px)', contain: 'layout' }}>
+              <div className="flex-1 overflow-y-auto" style={{ height: '100%', contain: 'layout' }}>
                 <ChatWindow
                   messages={currentSession?.messages || []}
                   isTyping={isTyping}
@@ -397,7 +397,7 @@ const Index = () => {
                 />
               </div>
               
-              <div className="lg:static sticky bottom-0 left-0 right-0 z-50 bg-transparent border-t-0 lg:border-t-0 lg:bg-transparent lg:z-auto">
+              <div className="sticky bottom-0 left-0 right-0 z-50 bg-transparent border-t-0 lg:border-t-0 lg:bg-transparent lg:z-auto lg:static" style={{ position: '-webkit-sticky', contain: 'layout' }}>
                 <InputBar
                   onSend={handleSendMessage}
                   disabled={isTyping}

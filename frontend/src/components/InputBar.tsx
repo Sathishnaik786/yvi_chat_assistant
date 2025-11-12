@@ -57,7 +57,7 @@ export const InputBar = ({ onSend, disabled }: InputBarProps) => {
   };
 
   return (
-    <div className="p-2 md:p-4 bg-transparent">
+    <div className="p-2 md:p-4 bg-transparent" style={{ position: 'relative', contain: 'layout' }}>
       <div className="max-w-4xl mx-auto">
         <div className="flex items-end gap-2">
           <div className="flex-1 relative">

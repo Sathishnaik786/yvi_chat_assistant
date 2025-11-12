@@ -44,7 +44,7 @@ export const Header = ({
   const { theme, setTheme } = useTheme();
 
   return (
-    <header className="bg-transparent sticky top-0 z-50 lg:z-10 lg:static">
+    <header className="bg-transparent sticky top-0 z-50 lg:z-10 lg:static" style={{ position: '-webkit-sticky' }}>
       <div className="flex items-center justify-between px-2 md:px-4 h-14">
         {/* Mobile: Menu button on left */}
         <div className="flex items-center lg:hidden">
@@ -59,7 +59,7 @@ export const Header = ({
         </div>
         
         {/* Mobile: Centered title with curved box */}
-        <div className="lg:hidden absolute left-1/2 transform -translate-x-1/2">
+        <div className="lg:hidden absolute left-1/2 transform -translate-x-1/2" style={{ zIndex: 60 }}>
           <div className="bg-background border border-border rounded-xl px-4 py-2">
             <h1 className="text-base font-semibold">YVI Assistant</h1>
           </div>
