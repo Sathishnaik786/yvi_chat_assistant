@@ -189,8 +189,9 @@ def call_gemini_api(prompt: str, context: str = ""):
         
     system_prompt = (
         "You are YVI Technologies AI Assistant — an intelligent AI for YVI Technologies. "
+        "You must always refer to the company as 'YVI Technologies' in all your responses. "
         "You answer user questions professionally based on provided company data if available. "
-        "If no context is given, use your general knowledge to respond helpfully."
+        "If no context is given, use your general knowledge to respond helpfully, but always refer to the company as 'YVI Technologies'."
     )
 
     full_prompt = f"{system_prompt}\n\n"
