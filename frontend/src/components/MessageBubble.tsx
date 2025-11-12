@@ -33,7 +33,7 @@ const TypingEffect = ({ text, speed = 30 }: { text: string; speed?: number }) =>
 interface MessageBubbleProps {
   message: Message;
   feedback?: { rating: 'positive' | 'negative'; comment: string };
-  onFeedback?: (messageId: string, rating: 'positive' | 'negative', comment: string) => void;
+  onFeedback?: (messageId: string, rating: 'positive' | 'negative', comment: string, remove?: boolean) => void;
   isFavorite?: boolean;
   onToggleFavorite?: (messageId: string, category: string, tags: string[], note: string) => void;
   onRemoveFavorite?: (messageId: string) => void;
@@ -78,12 +78,18 @@ export const MessageBubble = ({
 
   const handleFeedbackClick = (rating: 'positive' | 'negative') => {
     if (rating === 'positive') {
-      // For positive feedback, immediately show thank you message
+      // Toggle positive feedback
       if (onFeedback) {
-        onFeedback(message.id, 'positive', '');
+        // If already positively rated, remove the rating
+        if (feedback?.rating === 'positive') {
+          onFeedback(message.id, 'positive', '', true); // true to indicate removal
+        } else {
+          // Otherwise, set positive rating
+          onFeedback(message.id, 'positive', '');
+          setShowThankYou(true);
+          setTimeout(() => setShowThankYou(false), 3000);
+        }
       }
-      setShowThankYou(true);
-      setTimeout(() => setShowThankYou(false), 3000);
     } else {
       // For negative feedback, open the dialog
       setSelectedRating(rating);

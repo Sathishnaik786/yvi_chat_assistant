@@ -10,7 +10,7 @@ interface ChatWindowProps {
   isTyping: boolean;
   error: string | null;
   onExampleClick: (prompt: string) => void;
-  onFeedback?: (messageId: string, rating: 'positive' | 'negative', comment: string) => void;
+  onFeedback?: (messageId: string, rating: 'positive' | 'negative', comment: string, remove?: boolean) => void;
   getFeedback?: (messageId: string) => { rating: 'positive' | 'negative'; comment: string } | undefined;
   isFavorite?: (messageId: string) => boolean;
   onToggleFavorite?: (messageId: string, category: string, tags: string[], note: string) => void;

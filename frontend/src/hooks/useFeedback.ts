@@ -29,18 +29,24 @@ export const useFeedback = () => {
     }
   }, [feedbacks]);
 
-  const addFeedback = (messageId: string, rating: 'positive' | 'negative', comment: string) => {
-    const newFeedback: MessageFeedback = {
-      messageId,
-      rating,
-      comment,
-      timestamp: Date.now(),
-    };
+  const addFeedback = (messageId: string, rating: 'positive' | 'negative', comment: string, remove?: boolean) => {
+    if (remove) {
+      // Remove feedback for this message
+      setFeedbacks(prev => prev.filter(f => f.messageId !== messageId));
+    } else {
+      // Add or update feedback
+      const newFeedback: MessageFeedback = {
+        messageId,
+        rating,
+        comment,
+        timestamp: Date.now(),
+      };
 
-    setFeedbacks(prev => {
-      const filtered = prev.filter(f => f.messageId !== messageId);
-      return [...filtered, newFeedback];
-    });
+      setFeedbacks(prev => {
+        const filtered = prev.filter(f => f.messageId !== messageId);
+        return [...filtered, newFeedback];
+      });
+    }
   };
 
   const getFeedback = (messageId: string) => {
