@@ -400,24 +400,70 @@ export const ModernSidebar = ({
           ) : (
             <div className="space-y-1 py-2">
               {filteredSessions.slice(0, 5).map((session) => (
-                <Tooltip key={session.id}>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onSelectSession(session.id)}
-                      className={cn(
-                        "w-full text-sidebar-foreground hover:bg-sidebar-accent touch-target no-select",
-                        currentSessionId === session.id && "bg-sidebar-accent"
-                      )}
-                    >
-                      <MessageSquare className="h-5 w-5" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">
-                    <p className="max-w-xs truncate">{session.title}</p>
-                  </TooltipContent>
-                </Tooltip>
+                <div key={session.id} className="flex items-center group">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onSelectSession(session.id)}
+                        className={cn(
+                          "w-full text-sidebar-foreground hover:bg-sidebar-accent touch-target no-select",
+                          currentSessionId === session.id && "bg-sidebar-accent"
+                        )}
+                      >
+                        <MessageSquare className="h-5 w-5" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">
+                      <p className="max-w-xs truncate">{session.title}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRenameChat(session.id, session.title);
+                        }}
+                      >
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Rename
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleArchiveChat(session.id);
+                        }}
+                      >
+                        <FileArchive className="mr-2 h-4 w-4" />
+                        Archive
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem 
+                        className="text-red-600"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm('Are you sure you want to delete this chat? This action cannot be undone.')) {
+                            onDeleteSession(session.id);
+                          }
+                        }}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete Chat
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               ))}
             </div>
           )}
