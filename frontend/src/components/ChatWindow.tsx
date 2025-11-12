@@ -213,7 +213,7 @@ export const ChatWindow = ({
         )}
 
         {messages.map((message, index) => (
-          <div key={message.id}>
+          <div key={message.id} className="clear-both">
             <MessageBubble
               key={message.id}
               message={message}
@@ -230,7 +230,7 @@ export const ChatWindow = ({
             />
             {/* Show dynamic follow-up suggestions directly below bot responses */}
             {message.role === 'assistant' && (index < messages.length - 1 || !isTyping) ? (
-              <div className="px-4 pb-4">
+              <div className="px-4 pb-4 clear-both w-full">
                 <div className="flex gap-2 justify-start" style={{ flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                   {generateDynamicSuggestions(message.content, messages.slice(0, index + 1)).slice(0, 3).map((prompt, promptIndex) => (
                     <button
