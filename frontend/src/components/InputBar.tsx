@@ -57,7 +57,7 @@ export const InputBar = ({ onSend, disabled }: InputBarProps) => {
   };
 
   return (
-    <div className="p-2 md:p-4 bg-background lg:bg-transparent">
+    <div className="p-2 md:p-4 bg-transparent">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-end gap-2">
           <div className="flex-1 relative">
@@ -67,7 +67,7 @@ export const InputBar = ({ onSend, disabled }: InputBarProps) => {
                 value={message}
                 onChange={handleInput}
                 onKeyDown={handleKeyDown}
-                placeholder={isRecording ? 'Listening...' : 'Message YVI Assistant...'}
+                placeholder={isRecording ? 'Listening...' : 'Ask anything about YVI Technologies'}
                 disabled={disabled}
                 className="min-h-[44px] md:min-h-[52px] max-h-[200px] resize-none pr-24 md:pr-28 rounded-xl border border-input bg-transparent focus-visible:ring-1 focus-visible:ring-ring"
                 rows={1}
