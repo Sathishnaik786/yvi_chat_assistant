@@ -14,9 +14,9 @@ import {
   Check, 
   Share2, 
   Link, 
-  WhatsApp, 
-  Instagram, 
-  Linkedin, 
+  MessageCircle, 
+  Camera, 
+  Briefcase, 
   Mail 
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -99,7 +99,7 @@ export const SocialShareDialog = ({
               className="flex flex-col items-center justify-center h-20 gap-2"
               onClick={() => handleSocialShare('whatsapp')}
             >
-              <WhatsApp className="h-6 w-6 text-green-500" />
+              <MessageCircle className="h-6 w-6 text-green-500" />
               <span className="text-xs">WhatsApp</span>
             </Button>
             
@@ -108,7 +108,7 @@ export const SocialShareDialog = ({
               className="flex flex-col items-center justify-center h-20 gap-2"
               onClick={() => handleSocialShare('instagram')}
             >
-              <Instagram className="h-6 w-6 text-pink-500" />
+              <Camera className="h-6 w-6 text-pink-500" />
               <span className="text-xs">Instagram</span>
             </Button>
             
@@ -117,7 +117,7 @@ export const SocialShareDialog = ({
               className="flex flex-col items-center justify-center h-20 gap-2"
               onClick={() => handleSocialShare('linkedin')}
             >
-              <Linkedin className="h-6 w-6 text-blue-600" />
+              <Briefcase className="h-6 w-6 text-blue-600" />
               <span className="text-xs">LinkedIn</span>
             </Button>
             
