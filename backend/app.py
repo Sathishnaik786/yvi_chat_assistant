@@ -181,7 +181,7 @@ def search_database(query: str):
         print("Database search error:", e)
         return None
 
-def call_gemini_api(prompt: str, context: str = None) -> str:
+def call_gemini_api(prompt: str, context: str = "") -> str:
     """Call Gemini API with optional contextual enrichment."""
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     if not GEMINI_API_KEY:
@@ -193,7 +193,8 @@ def call_gemini_api(prompt: str, context: str = None) -> str:
         "NEVER use any other company name including 'YVI Soft Solutions', 'YVI Soft', or any variation. "
         "You answer user questions professionally based on provided company data if available. "
         "If no context is given, use your general knowledge to respond helpfully, but ALWAYS refer to the company as 'YVI Technologies' and NEVER as 'YVI Soft Solutions'. "
-        "IMPORTANT: Double-check every response to ensure 'YVI Technologies' is used and 'YVI Soft Solutions' is NEVER used."
+        "IMPORTANT: Double-check every response to ensure 'YVI Technologies' is used and 'YVI Soft Solutions' is NEVER used. "
+        "FINAL CHECK: Before sending any response, verify that it does not contain 'YVI Soft Solutions' or 'YVI Soft'."
     )
 
     full_prompt = f"{system_prompt}\n\n"
@@ -212,16 +213,23 @@ def call_gemini_api(prompt: str, context: str = None) -> str:
         # Check if response has the expected structure
         if "candidates" in result and len(result["candidates"]) > 0 and "content" in result["candidates"][0] and "parts" in result["candidates"][0]["content"]:
             response = result["candidates"][0]["content"]["parts"][0]["text"]
-            # Post-process to ensure correct company name
+            # Multiple-pass post-processing to ensure correct company name
             response = response.replace("YVI Soft Solutions", "YVI Technologies")
             response = response.replace("YVI Soft", "YVI Technologies")
+            # Additional check to ensure no variations slip through
+            response = response.replace("YVI soft solutions", "YVI Technologies")
+            response = response.replace("YVI soft", "YVI Technologies")
+            response = response.replace("YVI  Soft  Solutions", "YVI Technologies")  # Handle extra spaces
+            response = response.replace("YVI  Soft", "YVI Technologies")  # Handle extra spaces
             return response
         else:
             raise Exception("Unexpected API response structure")
 
     except Exception as e:
         print("Gemini API error:", e)
-        return "I'm having trouble connecting to the AI service right now. Please try again shortly."
+        # Even in error cases, ensure we don't leak the wrong company name
+        fallback_response = "I'm having trouble connecting to the AI service right now. Please try again shortly."
+        return fallback_response
 
 # ----------------------------
 # Admin Dashboard Routes
