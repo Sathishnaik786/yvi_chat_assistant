@@ -39,3 +39,15 @@ export const sendMessage = async (data: ChatRequest): Promise<ChatResponse> => {
     throw error;
   }
 };
+
+export const deleteChatSession = async (sessionId: string): Promise<boolean> => {
+  try {
+    await axios.delete(`${API_BASE_URL}/api/chat-sessions/${sessionId}`, {
+      timeout: 10000,
+    });
+    return true;
+  } catch (error) {
+    console.error('Error deleting chat session:', error);
+    return false;
+  }
+};

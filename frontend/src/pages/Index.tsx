@@ -33,10 +33,11 @@ import { ThemeProvider } from 'next-themes';
 import { useToast } from '@/hooks/use-toast';
 import { useTheme } from 'next-themes';
 import type { ConversationTemplate } from '@/hooks/useTemplates';
+import { deleteChatSession } from '@/utils/api';
 
 const Index = () => {
   // State hooks must be called first and in the same order
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
@@ -110,6 +111,36 @@ const Index = () => {
   } = useFolders();
   const { currentLanguage } = useLanguage();
   
+  // Handle delete chat functionality
+  const handleDeleteChat = async () => {
+    if (!currentSession) return;
+    
+    // Show confirmation dialog
+    if (!window.confirm('Are you sure you want to delete this chat? This action cannot be undone.')) {
+      return;
+    }
+    
+    try {
+      // Delete from backend
+      await deleteChatSession(currentSession.id);
+      
+      // Delete from local storage
+      deleteSession(currentSession.id);
+      
+      toast({ 
+        title: 'Chat deleted', 
+        description: 'The chat has been successfully deleted.' 
+      });
+    } catch (error) {
+      console.error('Error deleting chat:', error);
+      toast({ 
+        title: 'Error', 
+        description: 'Failed to delete chat. Please try again.', 
+        variant: 'destructive' 
+      });
+    }
+  };
+  
   // Keyboard shortcuts
   useKeyboardShortcuts([
     {
@@ -141,8 +172,7 @@ const Index = () => {
       description: 'Delete current chat',
       action: () => {
         if (currentSession) {
-          deleteSession(currentSession.id);
-          toast({ title: 'Chat deleted' });
+          handleDeleteChat();
         }
       },
     },
@@ -339,6 +369,7 @@ const Index = () => {
               onSummaryClick={() => setSummaryOpen(true)}
               onCommandPaletteClick={() => setCommandPaletteOpen(true)}
               onNewChat={createNewSession}
+              onDeleteChat={handleDeleteChat}
               currentSession={currentSession}
               allSessions={sessions}
             />

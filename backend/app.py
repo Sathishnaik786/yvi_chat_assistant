@@ -139,6 +139,19 @@ def chat():
     })
 
 # ----------------------------
+# Chat Session Management Endpoints
+# ----------------------------
+@app.route("/api/chat-sessions/<session_id>", methods=["DELETE"])
+def delete_chat_session(session_id):
+    """Delete a chat session by ID"""
+    try:
+        # For now, we'll just return success since sessions are stored in localStorage
+        # In a full implementation, this would delete from a database
+        return jsonify({"success": True, "message": "Chat session deleted successfully"})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+# ----------------------------
 # Helper functions for hybrid response logic
 # ----------------------------
 def search_database(query: str):

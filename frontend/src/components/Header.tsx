@@ -22,6 +22,7 @@ interface HeaderProps {
   onSummaryClick: () => void;
   onCommandPaletteClick: () => void;
   onNewChat: () => void; // Add this new prop
+  onDeleteChat: () => void; // Add delete chat prop
   currentSession: ChatSession | undefined;
   allSessions: ChatSession[];
 }
@@ -36,6 +37,7 @@ export const Header = ({
   onSummaryClick,
   onCommandPaletteClick,
   onNewChat, // Add this new prop
+  onDeleteChat, // Add delete chat prop
   currentSession,
   allSessions,
 }: HeaderProps) => {
@@ -96,7 +98,10 @@ export const Header = ({
                 Archive
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600">
+              <DropdownMenuItem 
+                className="text-red-600"
+                onClick={onDeleteChat}
+              >
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>

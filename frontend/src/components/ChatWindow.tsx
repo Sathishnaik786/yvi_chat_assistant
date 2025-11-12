@@ -62,39 +62,49 @@ export const ChatWindow = ({
   getThreadCount,
 }: ChatWindowProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const scrollToBottom = () => {
+      // Try multiple approaches to ensure scrolling works
       if (scrollRef.current) {
-        // Access the viewport element directly
-        const viewport = scrollRef.current.children[0]; // The first child is the Viewport
-        if (viewport) {
-          viewport.scrollTo({
-            top: viewport.scrollHeight,
-            behavior: 'smooth'
-          });
-        } else {
-          // Fallback to scrolling the parent element
-          scrollRef.current.scrollTo({
-            top: scrollRef.current.scrollHeight,
-            behavior: 'smooth'
-          });
-        }
+        // Scroll the main container
+        scrollRef.current.scrollTo({
+          top: scrollRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+      
+      if (innerRef.current) {
+        // Scroll the inner container
+        innerRef.current.scrollTo({
+          top: innerRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+      
+      // Fallback: Scroll to bottom using window
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       }
     };
     
-    // Scroll to bottom when messages change or typing state changes
+    // Scroll immediately when messages or typing state changes
     scrollToBottom();
     
-    // Also scroll after a small delay to ensure DOM updates
-    const timer = setTimeout(scrollToBottom, 100);
+    // Scroll again after a short delay to ensure DOM updates are complete
+    const timer1 = setTimeout(scrollToBottom, 50);
+    const timer2 = setTimeout(scrollToBottom, 100);
     
-    return () => clearTimeout(timer);
-  }, [messages.length, isTyping]);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [messages, isTyping]);
 
   return (
-    <div className="h-full overflow-y-auto" ref={scrollRef}>
-      <div className="max-w-4xl mx-auto mobile-responsive min-h-full">
+    <div className="h-full overflow-y-auto chat-scroll smooth-scroll auto-scroll" ref={scrollRef}>
+      <div className="max-w-4xl mx-auto mobile-responsive min-h-full" ref={innerRef}>
         {messages.length === 0 && !isTyping && (
           <div className="flex items-center justify-center h-full min-h-[300px] md:min-h-[400px] px-2 md:px-4">
             <div className="text-center space-y-4 md:space-y-6 max-w-3xl">
