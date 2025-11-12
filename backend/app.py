@@ -188,7 +188,7 @@ def call_gemini_api(prompt: str, context: str = ""):
         raise Exception("GEMINI_API_KEY not configured")
         
     system_prompt = (
-        "You are YVI Tech Assistant — an intelligent AI for YVI Soft Solutions. "
+        "You are YVI Tech Assistant — an intelligent AI for YVI Technologies Solutions. "
         "You answer user questions professionally based on provided company data if available. "
         "If no context is given, use your general knowledge to respond helpfully."
     )

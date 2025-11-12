@@ -121,7 +121,7 @@ def insert_knowledge_data():
             "category": "Other Capabilities",
             "title": "Digital Marketing",
             "keywords": ["digital marketing", "seo", "content", "campaigns"],
-            "description": "Dizi Babu Soft Solutions, the digital division of YVI Tech, specializes in AI-powered digital marketing strategies.\n\nWe provide:\n- AI-Generated Content\n- Personalized Campaigns\n- Predictive Analytics\n- Automated SEO\n- Creative Asset Production\n\nWhy Choose Us:\n- Generative AI Expertise\n- Innovation-Driven\n- Scalable Solutions\n- Data-Driven Approach\n\nWe help businesses enhance engagement, improve ROI, and strengthen their digital presence."
+            "description": "Dizi Babu YVI Technologies, the digital division of YVI Tech, specializes in AI-powered digital marketing strategies.\n\nWe provide:\n- AI-Generated Content\n- Personalized Campaigns\n- Predictive Analytics\n- Automated SEO\n- Creative Asset Production\n\nWhy Choose Us:\n- Generative AI Expertise\n- Innovation-Driven\n- Scalable Solutions\n- Data-Driven Approach\n\nWe help businesses enhance engagement, improve ROI, and strengthen their digital presence."
         },
         {
             "category": "Other Capabilities",
