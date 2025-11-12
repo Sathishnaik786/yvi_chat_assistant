@@ -45,12 +45,54 @@ const EXAMPLE_PROMPTS = [
   },
 ];
 
-// New suggestion prompts for after responses
-const FOLLOW_UP_PROMPTS = [
-  "What services do you offer?",
-  "Tell me more about your expertise",
-  "How can I get in touch with your team?"
-];
+// Dynamic suggestion prompts based on context
+const generateDynamicSuggestions = (lastMessage: string, messageHistory: Message[]): string[] => {
+  // Extract keywords from the last message
+  const keywords = lastMessage.toLowerCase().match(/\b(\w+)\b/g) || [];
+  
+  // Base suggestions
+  const baseSuggestions = [
+    "Tell me more details",
+    "What else should I know",
+    "How does this work"
+  ];
+  
+  // Context-based suggestions
+  if (keywords.some(word => ['service', 'services', 'offer', 'offering'].includes(word))) {
+    return [
+      "What industries do you serve?",
+      "Do you offer custom solutions?",
+      "What's your pricing model?"
+    ];
+  }
+  
+  if (keywords.some(word => ['company', 'about', 'organization'].includes(word))) {
+    return [
+      "When was YVI Technologies founded?",
+      "What's your company culture?",
+      "How many employees do you have?"
+    ];
+  }
+  
+  if (keywords.some(word => ['contact', 'location', 'address', 'phone', 'email'].includes(word))) {
+    return [
+      "What are your office hours?",
+      "Do you have international offices?",
+      "What's the best way to reach you?"
+    ];
+  }
+  
+  if (keywords.some(word => ['technology', 'tech', 'software', 'development'].includes(word))) {
+    return [
+      "What technologies do you use?",
+      "Do you provide technical support?",
+      "What's your development process?"
+    ];
+  }
+  
+  // Default to base suggestions if no specific context
+  return baseSuggestions;
+};
 
 // Helper function to get first 3 words
 const getFirstThreeWords = (sentence: string): string => {
@@ -186,11 +228,11 @@ export const ChatWindow = ({
               existingTags={existingTags}
               threadCount={getThreadCount?.(message.id)}
             />
-            {/* Show follow-up suggestions after bot responses */}
+            {/* Show dynamic follow-up suggestions after bot responses */}
             {message.role === 'assistant' && (index < messages.length - 1 || !isTyping) ? (
               <div className="px-4 pb-4">
-                <div className="flex gap-2 justify-start">
-                  {FOLLOW_UP_PROMPTS.slice(0, 3).map((prompt, promptIndex) => (
+                <div className="flex gap-2 justify-start flex-wrap">
+                  {generateDynamicSuggestions(message.content, messages.slice(0, index + 1)).slice(0, 3).map((prompt, promptIndex) => (
                     <button
                       key={promptIndex}
                       onClick={() => onExampleClick(prompt)}
