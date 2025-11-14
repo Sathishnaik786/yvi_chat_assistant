@@ -1,8 +1,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/yvitechnologies/yvi-tech-assistant">
-    <img src="https://yvitechnologies.com/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/yvi-tech-assistant">
+    <img src="https://yvitech.com/logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">YVI Technologies Assistant</h3>
