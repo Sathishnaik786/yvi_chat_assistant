@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { MessageBubble } from './MessageBubble';
 import { TypingIndicator } from './TypingIndicator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -143,6 +143,27 @@ const getFirstThreeWords = (sentence: string): string => {
   return sentence.split(' ').slice(0, 3).join(' ');
 };
 
+// Custom hook to compare arrays deeply
+const useDeepCompareMemo = <T,>(value: T): T => {
+  const ref = useRef<T>(value);
+  const isEqual = (a: T, b: T): boolean => {
+    if (a === b) return true;
+    if (Array.isArray(a) && Array.isArray(b)) {
+      if (a.length !== b.length) return false;
+      for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) return false;
+      }
+      return true;
+    }
+    return false;
+  };
+  
+  if (!isEqual(ref.current, value)) {
+    ref.current = value;
+  }
+  return ref.current;
+};
+
 export const ChatWindow = ({ 
   messages, 
   isTyping, 
@@ -162,6 +183,10 @@ export const ChatWindow = ({
 }: ChatWindowProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
+  
+  // Memoize messages to prevent unnecessary re-renders
+  const memoizedMessages = useDeepCompareMemo(messages);
+  const memoizedIsTyping = useMemo(() => isTyping, [isTyping]);
 
   useEffect(() => {
     const scrollToBottom = () => {
@@ -199,12 +224,12 @@ export const ChatWindow = ({
       clearTimeout(timer1);
       clearTimeout(timer2);
     };
-  }, [messages, isTyping]);
+  }, [memoizedMessages, memoizedIsTyping]);
 
   return (
     <div className="h-full overflow-y-auto chat-scroll smooth-scroll auto-scroll" ref={scrollRef}>
       <div className="max-w-4xl mx-auto mobile-responsive min-h-full" ref={innerRef}>
-        {messages.length === 0 && !isTyping && (
+        {memoizedMessages.length === 0 && !memoizedIsTyping && (
           <div className="flex items-center justify-center h-full min-h-screen w-full px-4">
             <div className="text-center space-y-6 max-w-2xl mx-auto py-12">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto shadow-lg">
@@ -257,7 +282,7 @@ export const ChatWindow = ({
           </div>
         )}
 
-        {messages.map((message, index) => (
+        {memoizedMessages.map((message, index) => (
           <div key={message.id} className="clear-both">
             <MessageBubble
               key={message.id}
@@ -273,12 +298,13 @@ export const ChatWindow = ({
               existingTags={existingTags}
               threadCount={getThreadCount?.(message.id)}
               shareCode={generateShareCode ? generateShareCode(message) : undefined}
+              isTyping={message.id === memoizedMessages[memoizedMessages.length - 1]?.id && memoizedIsTyping}
             />
             {/* Show dynamic follow-up suggestions directly below bot responses */}
-            {message.role === 'assistant' && (index < messages.length - 1 || !isTyping) ? (
+            {message.role === 'assistant' && (index < memoizedMessages.length - 1 || !memoizedIsTyping) ? (
               <div className="px-4 pb-4 clear-both w-full">
                 <div className="flex gap-2 justify-start" style={{ flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                  {generateDynamicSuggestions(message.content, messages.slice(0, index + 1)).slice(0, 3).map((prompt, promptIndex) => (
+                  {generateDynamicSuggestions(message.content, memoizedMessages.slice(0, index + 1)).slice(0, 3).map((prompt, promptIndex) => (
                     <button
                       key={promptIndex}
                       onClick={() => onExampleClick(prompt)}
@@ -294,7 +320,7 @@ export const ChatWindow = ({
           </div>
         ))}
 
-        {isTyping && <TypingIndicator />}
+        {memoizedIsTyping && <TypingIndicator />}
       </div>
     </div>
   );

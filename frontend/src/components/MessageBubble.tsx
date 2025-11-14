@@ -42,7 +42,8 @@ interface MessageBubbleProps {
   existingCategories?: string[];
   existingTags?: string[];
   threadCount?: number;
-  shareCode?: string; // Add this new prop
+  shareCode?: string;
+  isTyping?: boolean;
 }
 
 export const MessageBubble = ({ 
@@ -58,6 +59,7 @@ export const MessageBubble = ({
   existingTags = [],
   threadCount = 0,
   shareCode,
+  isTyping = false, // Add default value
 }: MessageBubbleProps) => {
   const [copied, setCopied] = useState(false);
   const [feedbackDialogOpen, setFeedbackDialogOpen] = useState(false);
@@ -160,8 +162,10 @@ export const MessageBubble = ({
         <div className="prose prose-xs md:prose-sm dark:prose-invert max-w-none break-words">
           {isUser ? (
             <ReactMarkdown>{message.content}</ReactMarkdown>
-          ) : (
+          ) : isTyping ? (
             <TypingEffect text={message.content} speed={20} />
+          ) : (
+            <ReactMarkdown>{message.content}</ReactMarkdown>
           )}
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@/i18n/config';
 import { Header } from '@/components/Header';
@@ -112,6 +112,15 @@ const Index = () => {
     getSubfolders,
   } = useFolders();
   const { currentLanguage } = useLanguage();
+  
+  // Memoize the messages array to prevent unnecessary re-renders
+  const messages = useMemo(() => {
+    return currentSession?.messages || [];
+  }, [currentSession]);
+  
+  // Memoize categories and tags to prevent unnecessary re-renders
+  const memoizedCategories = useMemo(() => getAllCategories(), [getAllCategories]);
+  const memoizedTags = useMemo(() => getAllTags(), [getAllTags]);
   
   // Handle delete chat functionality
   const handleDeleteChat = async () => {
@@ -380,7 +389,7 @@ const Index = () => {
             <div className="flex-1 flex flex-col" style={{ height: 'calc(100vh - 112px)', contain: 'layout' }}>
               <div className="flex-1 overflow-y-auto" style={{ height: '100%', contain: 'layout' }}>
                 <ChatWindow
-                  messages={currentSession?.messages || []}
+                  messages={messages}
                   isTyping={isTyping}
                   error={error}
                   onExampleClick={handleSendMessage}
@@ -394,14 +403,14 @@ const Index = () => {
                   }}
                   onCreateThread={handleCreateThread}
                   onShareClick={handleShareMessage}
-                  existingCategories={getAllCategories()}
-                  existingTags={getAllTags()}
+                  existingCategories={memoizedCategories}
+                  existingTags={memoizedTags}
                   getThreadCount={getThreadCount}
-                  generateShareCode={generateMessageShareCode} // Add this new prop
+                  generateShareCode={generateMessageShareCode}
                 />
               </div>
               
-              <div className="sticky bottom-0 left-0 right-0 z-50 bg-background border-t border-border lg:z-10 lg:static" style={{ position: '-webkit-sticky', position: 'sticky', contain: 'layout' }}>
+              <div className="sticky bottom-0 left-0 right-0 z-50 bg-background border-t border-border lg:z-10 lg:static" style={{ position: 'sticky', contain: 'layout' }}>
                 <InputBar
                   onSend={handleSendMessage}
                   disabled={isTyping}

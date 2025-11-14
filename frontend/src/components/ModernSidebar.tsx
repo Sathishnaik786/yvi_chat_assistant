@@ -105,7 +105,8 @@ export const ModernSidebar = ({
           s.id === sessionId ? { ...s, title: newTitle.trim(), lastUpdated: Date.now() } : s
         );
         localStorage.setItem('yvi_chat_sessions', JSON.stringify(updatedSessions));
-        window.location.reload();
+        // Update state instead of reloading the page
+        window.dispatchEvent(new Event('storage'));
       }
     }
   };
@@ -121,7 +122,8 @@ export const ModernSidebar = ({
           s.id === sessionId ? { ...s, archived: true, lastUpdated: Date.now() } : s
         );
         localStorage.setItem('yvi_chat_sessions', JSON.stringify(updatedSessions));
-        window.location.reload();
+        // Update state instead of reloading the page
+        window.dispatchEvent(new Event('storage'));
       }
     }
   };
@@ -383,7 +385,8 @@ export const ModernSidebar = ({
                                   s.id === session.id ? { ...s, archived: false, lastUpdated: Date.now() } : s
                                 );
                                 localStorage.setItem('yvi_chat_sessions', JSON.stringify(updatedSessions));
-                                window.location.reload();
+                                // Update state instead of reloading the page
+                                window.dispatchEvent(new Event('storage'));
                               }
                             }}
                           >
@@ -474,6 +477,19 @@ export const ModernSidebar = ({
                       >
                         <FileArchive className="mr-2 h-4 w-4" />
                         Archive
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Handle report action
+                          console.log('Report chat:', session.id);
+                          // You can implement the actual report functionality here
+                          alert('Chat reported. Thank you for helping us improve!');
+                        }}
+                      >
+                        <Flag className="mr-2 h-4 w-4" />
+                        Report
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { sendMessage } from '@/utils/api';
 import type { AISettings } from './useSettings';
 
@@ -43,7 +43,10 @@ export const useChat = () => {
     }
   }, [currentSessionId]);
 
-  const currentSession = sessions.find(s => s.id === currentSessionId);
+  // Memoize currentSession to prevent unnecessary re-renders
+  const currentSession = useMemo(() => {
+    return sessions.find(s => s.id === currentSessionId) || null;
+  }, [sessions, currentSessionId]);
 
   const generateSessionTitle = (firstMessage: string): string => {
     return firstMessage.slice(0, 30) + (firstMessage.length > 30 ? '...' : '');
@@ -80,6 +83,22 @@ export const useChat = () => {
       createNewSession();
     }
   }, [createNewSession]);
+
+  // Add event listener for storage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsedSessions = JSON.parse(stored);
+        setSessions(parsedSessions);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const switchSession = useCallback((sessionId: string) => {
     setCurrentSessionId(sessionId);
