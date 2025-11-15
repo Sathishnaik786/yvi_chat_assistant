@@ -172,12 +172,12 @@ All colors MUST be HSL.
   
   /* Smoother scrolling for mobile */
   .smooth-scroll {
-    -webkit-overflow-scrolling: touch;
+    /* Removed -webkit-overflow-scrolling: touch; to prevent scroll-linked effects */
   }
   
   /* Auto-scrolling behavior */
   .auto-scroll {
-    scroll-behavior: smooth;
+    /* Removed scroll-behavior: smooth; to prevent scroll-linked effects */
   }
   
   /* Hide scrollbar */

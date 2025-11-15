@@ -131,7 +131,10 @@ def chat():
         source = "AI Response"
 
     # 4️⃣ Log the chat
-    log_chat_interaction(user_query, reply, None, None)
+    matched_category = None
+    if search_result:
+        matched_category = search_result.get("match", {}).get("category")
+    log_chat_interaction(user_query, reply, matched_category, source)
 
     return jsonify({
         "reply": reply

@@ -205,18 +205,18 @@ export const ChatWindow = ({
     const scrollToBottom = () => {
       // Try multiple approaches to ensure scrolling works
       if (scrollRef.current) {
-        // Scroll the main container
+        // Scroll the main container (removed smooth behavior)
         scrollRef.current.scrollTo({
           top: scrollRef.current.scrollHeight,
-          behavior: 'smooth'
+          behavior: 'auto' // Changed from 'smooth' to 'auto'
         });
       }
       
       if (innerRef.current) {
-        // Scroll the inner container
+        // Scroll the inner container (removed smooth behavior)
         innerRef.current.scrollTo({
           top: innerRef.current.scrollHeight,
-          behavior: 'smooth'
+          behavior: 'auto' // Changed from 'smooth' to 'auto'
         });
       }
       
@@ -240,7 +240,7 @@ export const ChatWindow = ({
   }, [memoizedMessages, memoizedIsTyping, isAssistantRevealing]); // Add isAssistantRevealing to dependencies
 
   return (
-    <div className="h-full overflow-y-auto chat-scroll smooth-scroll auto-scroll" ref={scrollRef}>
+    <div className="h-full overflow-y-auto chat-scroll smooth-scroll" ref={scrollRef}>
       <div className="max-w-4xl mx-auto mobile-responsive min-h-full" ref={innerRef}>
         {memoizedMessages.length === 0 && !memoizedIsTyping && (
           <div className="flex items-center justify-center h-full min-h-screen w-full px-4">

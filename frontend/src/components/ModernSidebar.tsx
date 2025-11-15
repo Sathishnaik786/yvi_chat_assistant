@@ -155,7 +155,7 @@ export const ModernSidebar = ({
             <>
               <div className="flex items-center gap-2">
                 <img 
-                  src="/logo.svg" 
+                  src="/logo.png" 
                   alt="YVI Logo" 
                   className="w-8 h-8 rounded-lg"
                 />

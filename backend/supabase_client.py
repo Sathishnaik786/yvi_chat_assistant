@@ -106,8 +106,11 @@ def log_chat_interaction(user_query: str, bot_response: str, matched_category = 
             "matched_category": matched_category,
             "source": source
         }).execute()
+        print(f"Successfully logged interaction: {user_query}")  # Added for debugging
     except Exception as e:
         print(f"Error logging chat interaction: {e}")
+        import traceback
+        traceback.print_exc()  # Added for better error diagnostics
 
 def initialize_knowledge_base():
     """
