@@ -1,7 +1,9 @@
 /* stylelint-disable at-rule-no-unknown */
+/* csslint ignore:start */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* csslint ignore:end */
 /* stylelint-enable at-rule-no-unknown */
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
@@ -111,7 +113,7 @@ All colors MUST be HSL.
 @layer utilities {
   .typing-dot {
     /* stylelint-disable-next-line at-rule-no-unknown */
-    @apply w-2 h-2 rounded-full bg-muted-foreground animate-pulse;
+    @apply w-2 h-2 rounded-full bg-muted-foreground;
   }
   
   .chat-scroll {

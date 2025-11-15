@@ -21,6 +21,7 @@ interface ChatWindowProps {
   existingTags?: string[];
   getThreadCount?: (messageId: string) => number;
   generateShareCode?: (message: Message) => string;
+  onSkipReveal?: (messageId: string) => void; // Add skip reveal callback
 }
 
 const EXAMPLE_PROMPTS = [
@@ -180,6 +181,7 @@ export const ChatWindow = ({
   existingTags,
   getThreadCount,
   generateShareCode,
+  onSkipReveal, // Destructure the skip reveal callback
 }: ChatWindowProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -187,6 +189,17 @@ export const ChatWindow = ({
   // Memoize messages to prevent unnecessary re-renders
   const memoizedMessages = useDeepCompareMemo(messages);
   const memoizedIsTyping = useMemo(() => isTyping, [isTyping]);
+
+  // Determine if there's an assistant message currently being revealed
+  const isAssistantRevealing = useMemo(() => {
+    // Check if there's an assistant message that is not yet fully revealed
+    return messages.some(msg => 
+      msg.role === 'assistant' && 
+      !msg.isRevealed && 
+      msg.displayedContent !== undefined && 
+      msg.displayedContent !== msg.content
+    );
+  }, [messages]);
 
   useEffect(() => {
     const scrollToBottom = () => {
@@ -224,7 +237,7 @@ export const ChatWindow = ({
       clearTimeout(timer1);
       clearTimeout(timer2);
     };
-  }, [memoizedMessages, memoizedIsTyping]);
+  }, [memoizedMessages, memoizedIsTyping, isAssistantRevealing]); // Add isAssistantRevealing to dependencies
 
   return (
     <div className="h-full overflow-y-auto chat-scroll smooth-scroll auto-scroll" ref={scrollRef}>
@@ -282,45 +295,54 @@ export const ChatWindow = ({
           </div>
         )}
 
-        {memoizedMessages.map((message, index) => (
-          <div key={message.id} className="clear-both">
-            <MessageBubble
-              key={`${message.id}-${isTyping ? 'typing' : 'done'}`}
-              message={message}
-              feedback={getFeedback?.(message.id)}
-              onFeedback={onFeedback}
-              isFavorite={isFavorite?.(message.id)}
-              onToggleFavorite={onToggleFavorite}
-              onRemoveFavorite={onRemoveFavorite}
-              onCreateThread={onCreateThread}
-              onShareClick={onShareClick}
-              existingCategories={existingCategories}
-              existingTags={existingTags}
-              threadCount={getThreadCount?.(message.id)}
-              shareCode={generateShareCode ? generateShareCode(message) : undefined}
-              isTyping={message.id === memoizedMessages[memoizedMessages.length - 1]?.id && memoizedIsTyping}
-            />
-            {/* Show dynamic follow-up suggestions directly below bot responses */}
-            {message.role === 'assistant' && (index < memoizedMessages.length - 1 || !memoizedIsTyping) ? (
-              <div className="px-4 pb-4 clear-both w-full">
-                <div className="flex gap-2 justify-start" style={{ flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                  {generateDynamicSuggestions(message.content, memoizedMessages.slice(0, index + 1)).slice(0, 3).map((prompt, promptIndex) => (
-                    <button
-                      key={promptIndex}
-                      onClick={() => onExampleClick(prompt)}
-                      className="px-3 py-2 text-sm rounded-lg border border-border bg-card hover:bg-accent transition-all duration-200 text-muted-foreground hover:text-foreground shadow-sm whitespace-nowrap"
-                      style={{ flexShrink: 0 }}
-                    >
-                      {getFirstThreeWords(prompt)}
-                    </button>
-                  ))}
+        {memoizedMessages.map((message, index) => {
+          // Determine if this message should show typing effect
+          // It should be the last message, currently typing, and from the assistant
+          const isLastMessage = index === memoizedMessages.length - 1;
+          const messageIsTyping = isLastMessage && memoizedIsTyping && message.role === 'assistant';
+          
+          return (
+            <div key={message.id} className="clear-both">
+              <MessageBubble
+                key={`${message.id}-${messageIsTyping ? 'typing' : 'done'}`}
+                message={message}
+                feedback={getFeedback?.(message.id)}
+                onFeedback={onFeedback}
+                isFavorite={isFavorite?.(message.id)}
+                onToggleFavorite={onToggleFavorite}
+                onRemoveFavorite={onRemoveFavorite}
+                onCreateThread={onCreateThread}
+                onShareClick={onShareClick}
+                existingCategories={existingCategories}
+                existingTags={existingTags}
+                threadCount={getThreadCount?.(message.id)}
+                shareCode={generateShareCode ? generateShareCode(message) : undefined}
+                isTyping={messageIsTyping}
+                onSkipReveal={onSkipReveal} // Pass the skip reveal callback
+              />
+              {/* Show dynamic follow-up suggestions directly below bot responses */}
+              {message.role === 'assistant' && (index < memoizedMessages.length - 1 || !memoizedIsTyping) ? (
+                <div className="px-4 pb-4 clear-both w-full">
+                  <div className="flex gap-2 justify-start" style={{ flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                    {generateDynamicSuggestions(message.content, memoizedMessages.slice(0, index + 1)).slice(0, 3).map((prompt, promptIndex) => (
+                      <button
+                        key={promptIndex}
+                        onClick={() => onExampleClick(prompt)}
+                        className="px-3 py-2 text-sm rounded-lg border border-border bg-card hover:bg-accent transition-all duration-200 text-muted-foreground hover:text-foreground shadow-sm whitespace-nowrap"
+                        style={{ flexShrink: 0 }}
+                      >
+                        {getFirstThreeWords(prompt)}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ) : null}
-          </div>
-        ))}
+              ) : null}
+            </div>
+          );
+        })}
 
-        {memoizedIsTyping && <TypingIndicator />}
+        {/* Show typing indicator only when there's an actual typing state or assistant is revealing */}
+
       </div>
     </div>
   );

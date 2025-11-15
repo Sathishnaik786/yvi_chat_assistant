@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@/i18n/config';
 import { Header } from '@/components/Header';
@@ -73,6 +73,7 @@ const Index = () => {
     updateSession,
     bulkDeleteSessions,
     bulkUpdateSessions,
+    skipReveal, // Destructure the skipReveal function
   } = useChat();
   const { addFeedback, getFeedback } = useFeedback();
   const { 
@@ -407,6 +408,7 @@ const Index = () => {
                   existingTags={memoizedTags}
                   getThreadCount={getThreadCount}
                   generateShareCode={generateMessageShareCode}
+                  onSkipReveal={skipReveal} // Pass the skipReveal function
                 />
               </div>
               

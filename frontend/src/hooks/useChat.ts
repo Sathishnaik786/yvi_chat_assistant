@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { sendMessage } from '@/utils/api';
+import { revealByChar } from '@/utils/typist';
 import type { AISettings } from './useSettings';
 
 export interface Message {
@@ -8,6 +9,9 @@ export interface Message {
   content: string;
   timestamp: number;
   source?: string;
+  // Added for typewriter effect
+  displayedContent?: string;
+  isRevealed?: boolean;
 }
 
 export interface ChatSession {
@@ -23,11 +27,19 @@ export interface ChatSession {
 const STORAGE_KEY = 'yvi_chat_sessions';
 const CURRENT_SESSION_KEY = 'yvi_current_session';
 
+// Configuration constants
+const REVEAL_MODE = 'char'; // 'char' or 'word'
+const CHAR_SPEED_MS = 25;
+const WORD_SPEED_MS = 180;
+
 export const useChat = () => {
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string>('');
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Refs for abort controllers to manage reveal cancellation
+  const abortControllerRefs = useRef<Map<string, AbortController>>(new Map());
 
   // Save sessions to localStorage
   useEffect(() => {
@@ -161,8 +173,55 @@ export const useChat = () => {
     ));
   }, []);
 
+  // Function to skip reveal for a specific message
+  const skipReveal = useCallback((messageId: string) => {
+    const controller = abortControllerRefs.current.get(messageId);
+    if (controller) {
+      controller.abort();
+      abortControllerRefs.current.delete(messageId);
+    }
+    
+    // Update message to show full content
+    setSessions(prev => prev.map(session => {
+      if (session.id === currentSessionId) {
+        return {
+          ...session,
+          messages: session.messages.map(msg => 
+            msg.id === messageId 
+              ? { ...msg, displayedContent: msg.content, isRevealed: true } 
+              : msg
+          ),
+          lastUpdated: Date.now(),
+        };
+      }
+      return session;
+    }));
+  }, [currentSessionId]);
+
+  // Function to automatically skip reveal when user sends a new message
+  const autoSkipReveal = useCallback(() => {
+    setSessions(prev => {
+      const currentSession = prev.find(s => s.id === currentSessionId);
+      if (!currentSession) return prev;
+      
+      // Find any assistant message that is currently being revealed
+      const unrevealedMessage = currentSession.messages
+        .filter(msg => msg.role === 'assistant')
+        .find(msg => !msg.isRevealed && msg.displayedContent !== msg.content);
+      
+      if (unrevealedMessage) {
+        skipReveal(unrevealedMessage.id);
+      }
+      
+      return prev;
+    });
+  }, [currentSessionId, skipReveal]);
+
   const sendUserMessage = useCallback(async (content: string, settings?: AISettings) => {
     if (!content.trim() || !currentSessionId) return;
+
+    // Auto-skip any ongoing reveal when user sends a new message
+    autoSkipReveal();
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -209,8 +268,11 @@ export const useChat = () => {
         content: response.reply,
         timestamp: Date.now(),
         source: response.source,
+        displayedContent: '', // Initialize with empty string for progressive reveal
+        isRevealed: false, // Mark as not fully revealed yet
       };
 
+      // Add the assistant message immediately
       setSessions(prev => prev.map(session => {
         if (session.id === currentSessionId) {
           return {
@@ -221,13 +283,59 @@ export const useChat = () => {
         }
         return session;
       }));
+
+      // Start the reveal process
+      const controller = new AbortController();
+      abortControllerRefs.current.set(assistantMessage.id, controller);
+      
+      // Update message with revealed content progressively
+      await revealByChar(
+        response.reply,
+        (current) => {
+          setSessions(prev => prev.map(session => {
+            if (session.id === currentSessionId) {
+              return {
+                ...session,
+                messages: session.messages.map(msg => 
+                  msg.id === assistantMessage.id 
+                    ? { ...msg, displayedContent: current } 
+                    : msg
+                ),
+                lastUpdated: Date.now(),
+              };
+            }
+            return session;
+          }));
+        },
+        CHAR_SPEED_MS,
+        controller.signal
+      );
+
+      // Mark message as fully revealed
+      setSessions(prev => prev.map(session => {
+        if (session.id === currentSessionId) {
+          return {
+            ...session,
+            messages: session.messages.map(msg => 
+              msg.id === assistantMessage.id 
+                ? { ...msg, isRevealed: true } 
+                : msg
+            ),
+            lastUpdated: Date.now(),
+          };
+        }
+        return session;
+      }));
+
+      // Clean up abort controller
+      abortControllerRefs.current.delete(assistantMessage.id);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to send message';
       setError(errorMessage);
     } finally {
       setIsTyping(false);
     }
-  }, [currentSessionId]);
+  }, [currentSessionId, autoSkipReveal]);
 
   return {
     sessions,
@@ -243,5 +351,6 @@ export const useChat = () => {
     updateSession,
     bulkDeleteSessions,
     bulkUpdateSessions,
+    skipReveal, // Export the skipReveal function
   };
 };

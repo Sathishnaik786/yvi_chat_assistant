@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Copy, ThumbsUp, ThumbsDown, Check, Star, GitBranch, Share2 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -10,25 +10,6 @@ import { SocialShareDialog } from './SocialShareDialog';
 import ReactMarkdown from 'react-markdown';
 import type { Message } from '@/hooks/useChat';
 import { cn } from '@/lib/utils';
-
-// Typing effect component for bot messages
-const TypingEffect = ({ text, speed = 30 }: { text: string; speed?: number }) => {
-  const [displayedText, setDisplayedText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    if (currentIndex < text.length) {
-      const timeout = setTimeout(() => {
-        setDisplayedText(prev => prev + text[currentIndex]);
-        setCurrentIndex(prev => prev + 1);
-      }, speed);
-      
-      return () => clearTimeout(timeout);
-    }
-  }, [currentIndex, text, speed]);
-
-  return <ReactMarkdown>{displayedText}</ReactMarkdown>;
-};
 
 interface MessageBubbleProps {
   message: Message;
@@ -44,6 +25,7 @@ interface MessageBubbleProps {
   threadCount?: number;
   shareCode?: string;
   isTyping?: boolean;
+  onSkipReveal?: (messageId: string) => void; // Add skip reveal callback
 }
 
 export const MessageBubble = ({ 
@@ -59,7 +41,8 @@ export const MessageBubble = ({
   existingTags = [],
   threadCount = 0,
   shareCode,
-  isTyping = false, // Add default value
+  isTyping = false,
+  onSkipReveal, // Destructure the skip reveal callback
 }: MessageBubbleProps) => {
   const [copied, setCopied] = useState(false);
   const [feedbackDialogOpen, setFeedbackDialogOpen] = useState(false);
@@ -69,8 +52,10 @@ export const MessageBubble = ({
   const [selectedRating, setSelectedRating] = useState<'positive' | 'negative'>('positive');
   const [showThankYou, setShowThankYou] = useState(false);
   const { toast } = useToast();
-
   const isUser = message.role === 'user';
+  
+  // Ref for the message bubble container
+  const bubbleRef = useRef<HTMLDivElement>(null);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(message.content);
@@ -145,14 +130,37 @@ export const MessageBubble = ({
     }
   };
 
+  // Handle skip reveal on click for assistant messages
+  const handleSkipReveal = () => {
+    if (!isUser && onSkipReveal && message.role === 'assistant' && !message.isRevealed) {
+      onSkipReveal(message.id);
+    }
+  };
+
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Skip reveal with Ctrl+Enter when focused on the message
+      if (e.ctrlKey && e.key === 'Enter' && bubbleRef.current && bubbleRef.current.contains(document.activeElement)) {
+        handleSkipReveal();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleSkipReveal]);
+
   return (
-    <motion.div
+    <div
       id={`message-${message.id}`}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
+      ref={bubbleRef}
       className={`px-2 md:px-4 py-2 md:py-3 ${
         isUser ? 'ml-auto float-right clear-both' : 'mr-auto float-left clear-both'
       } max-w-[90%] md:max-w-[85%] group transition-all`}
+      onClick={handleSkipReveal}
+      tabIndex={message.role === 'assistant' && !message.isRevealed ? 0 : -1}
     >
       <div className={`rounded-2xl px-3 md:px-4 py-2 md:py-3 inline-block ${
         isUser 
@@ -163,9 +171,20 @@ export const MessageBubble = ({
           {isUser ? (
             <ReactMarkdown>{message.content}</ReactMarkdown>
           ) : isTyping ? (
-            <TypingEffect text={message.content} speed={30} />
+            <div className="border-l-2 border-primary pl-2 bg-muted/50 rounded-r p-2">
+              <ReactMarkdown>
+                {message.displayedContent || ''}
+              </ReactMarkdown>
+            </div>
           ) : (
-            <ReactMarkdown>{message.content}</ReactMarkdown>
+            <ReactMarkdown>
+              {/* Use displayedContent if available (for progressive reveal), otherwise use full content */}
+              {message.displayedContent !== undefined ? message.displayedContent : message.content}
+            </ReactMarkdown>
+          )}
+          {/* Show blinking cursor while revealing */}
+          {!isUser && !isTyping && !message.isRevealed && (
+            <span className="ml-1 inline-block w-2 h-4 bg-primary animate-pulse"></span>
           )}
         </div>
       </div>
@@ -270,6 +289,6 @@ export const MessageBubble = ({
           onCreateThread={handleCreateThread}
         />
       )}
-    </motion.div>
+    </div>
   );
 };
